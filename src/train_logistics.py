@@ -44,7 +44,7 @@ def run_logistic_baseline():
     print(f"{'Fold':<8} | {'Val Samples':<14} | {'Accuracy':<12}")
     print("-" * 55)
 
-    for fold, train_idx, val_idx in get_folds(folds_df):
+    for fold, train_idx, val_idx in get_folds(folds_df, ids=X_train.index):
         # Selezione dei campioni per fold
         X_tr, y_tr = X_train.iloc[train_idx], y_train.iloc[train_idx]
         X_va, y_va = X_train.iloc[val_idx], y_train.iloc[val_idx]

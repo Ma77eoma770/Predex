@@ -42,15 +42,21 @@ def load_train_metadata(train_path: Union[str, Path] = TRAIN_JSONL) -> pd.DataFr
     targets = []
 
     with open(train_path, "r", encoding="utf-8") as f:
-        for line_idx, line in enumerate(f):
+        for line in f:
+            if not line.strip():
+                continue
             data = json.loads(line)
-            battle_ids.append(data.get(ID_COL, line_idx))
-            targets.append(data[TARGET_COL])
+            # Fail loudly on a missing id: inventing one would silently break the
+            # battle_id -> fold mapping used by every model.
+            battle_ids.append(data[ID_COL])
+            targets.append(int(data[TARGET_COL]))
 
     df = pd.DataFrame({
         ID_COL: battle_ids,
         TARGET_COL: targets,
     })
+    if df[ID_COL].duplicated().any():
+        raise ValueError(f"Duplicate {ID_COL} values found in {train_path}")
     return df
 
 
@@ -83,20 +89,9 @@ def create_stratified_folds(
     for fold, (_, val_idx) in enumerate(skf.split(df, df[TARGET_COL])):
         df.iloc[val_idx, df.columns.get_loc("fold")] = fold
 
-    # Sanity checks
-    assert (df["fold"] >= 0).all(), "Error: Some samples were not assigned to any fold!"
-    assert len(df["fold"].unique()) == n_splits, f"Error: Expected {n_splits} folds, got {len(df['fold'].unique())}"
-
-    # Verify disjoint validation folds
-    val_indices_per_fold = [set(df[df["fold"] == f].index) for f in range(n_splits)]
-    for i in range(n_splits):
-        for j in range(i + 1, n_splits):
-            intersection = val_indices_per_fold[i] & val_indices_per_fold[j]
-            assert len(intersection) == 0, f"Error: Leakage detected between fold {i} and fold {j}!"
-
-    # Verify coverage
-    all_assigned = set.union(*val_indices_per_fold)
-    assert len(all_assigned) == len(df), "Error: Not all samples covered in folds!"
+    # Each row has exactly one fold value, so validation folds are disjoint by
+    # construction; what can go wrong is coverage, fold count and balance.
+    _validate_folds(df, n_splits)
 
     if output_path is not None:
         out_p = Path(output_path)
@@ -107,33 +102,92 @@ def create_stratified_folds(
     return df
 
 
-def load_folds(folds_path: Union[str, Path] = FOLDS_CSV) -> pd.DataFrame:
-    """Load precomputed folds CSV or create them if the file does not exist."""
+def _validate_folds(df: pd.DataFrame, n_splits: int) -> None:
+    """Raise if the fold assignment is incomplete, unbalanced or has the wrong fold count."""
+    missing_cols = {ID_COL, TARGET_COL, "fold"} - set(df.columns)
+    if missing_cols:
+        raise ValueError(f"Folds table is missing columns: {sorted(missing_cols)}")
+    if df[ID_COL].duplicated().any():
+        raise ValueError(f"Folds table contains duplicate {ID_COL} values")
+    if (df["fold"] < 0).any():
+        raise ValueError("Some samples were not assigned to any fold")
+    if sorted(df["fold"].unique()) != list(range(n_splits)):
+        raise ValueError(
+            f"Expected folds 0..{n_splits - 1}, got {sorted(df['fold'].unique())}. "
+            f"If N_FOLDS changed, regenerate with create_stratified_folds()."
+        )
+
+    sizes = df["fold"].value_counts()
+    if sizes.max() - sizes.min() > 1:
+        raise ValueError(f"Fold sizes are uneven: {sizes.to_dict()}")
+
+    # Stratification: every fold's positive rate must stay close to the global one
+    # (StratifiedKFold guarantees a difference of at most ~1 sample per class).
+    global_rate = df[TARGET_COL].mean()
+    fold_rates = df.groupby("fold")[TARGET_COL].mean()
+    tolerance = 2.0 / sizes.min()
+    if (fold_rates - global_rate).abs().max() > tolerance:
+        raise ValueError(f"Folds are not stratified: positive rates {fold_rates.round(4).to_dict()}")
+
+
+def load_folds(
+    folds_path: Union[str, Path] = FOLDS_CSV,
+    n_splits: int = N_FOLDS,
+) -> pd.DataFrame:
+    """Load the precomputed folds CSV, creating it only if the file does not exist.
+
+    The committed CSV is the single source of truth for the team: it is validated
+    on load instead of being silently regenerated, so everyone keeps the same folds.
+    """
     folds_path = Path(folds_path)
-    if folds_path.exists():
-        return pd.read_csv(folds_path)
-    return create_stratified_folds(output_path=folds_path)
+    if not folds_path.exists():
+        return create_stratified_folds(n_splits=n_splits, output_path=folds_path)
+
+    folds_df = pd.read_csv(folds_path)
+    _validate_folds(folds_df, n_splits)
+    return folds_df
 
 
 def get_folds(
     folds_df: Optional[pd.DataFrame] = None,
-    n_splits: int = N_FOLDS,
+    ids: Optional[Union[pd.Index, np.ndarray, List[int]]] = None,
 ) -> Generator[Tuple[int, np.ndarray, np.ndarray], None, None]:
-    """Generator yielding (fold, train_indices, val_indices) for cross-validation loops.
-    
+    """Generator yielding (fold, train_positions, val_positions) for CV loops.
+
+    The yielded arrays are 0-based row positions, meant for `.iloc` / numpy indexing.
+
+    Args:
+        folds_df: Optional preloaded folds DataFrame.
+        ids: battle_id of each row of your feature matrix, in its row order
+            (typically `X_train.index`). Positions are then computed by matching
+            battle_id, so the split stays correct even if X_train was sorted,
+            filtered or built in a different order than train.jsonl.
+            Without it, X_train is ASSUMED to follow the CSV row order.
+
     Usage:
-        for fold, train_idx, val_idx in get_folds():
-            # train_idx contains row indices (or battle_ids) for training
-            # val_idx contains row indices (or battle_ids) for validation
+        for fold, train_idx, val_idx in get_folds(folds_df, ids=X_train.index):
+            X_tr, X_va = X_train.iloc[train_idx], X_train.iloc[val_idx]
             ...
     """
     if folds_df is None:
         folds_df = load_folds()
 
-    for fold in range(n_splits):
-        train_idx = folds_df[folds_df["fold"] != fold].index.to_numpy()
-        val_idx = folds_df[folds_df["fold"] == fold].index.to_numpy()
-        yield fold, train_idx, val_idx
+    if ids is None:
+        fold_per_row = folds_df["fold"].to_numpy()
+    else:
+        ids = np.asarray(ids)
+        fold_by_id = folds_df.set_index(ID_COL)["fold"]
+        if len(ids) != len(fold_by_id) or not np.isin(ids, fold_by_id.index).all():
+            raise ValueError(
+                f"The given ids ({len(ids)}) do not match the {ID_COL}s of the folds table "
+                f"({len(fold_by_id)}). The feature matrix must contain exactly the training battles."
+            )
+        fold_per_row = fold_by_id.loc[ids].to_numpy()
+
+    for fold in np.sort(np.unique(fold_per_row)):
+        train_idx = np.flatnonzero(fold_per_row != fold)
+        val_idx = np.flatnonzero(fold_per_row == fold)
+        yield int(fold), train_idx, val_idx
 
 
 def get_fold_battle_ids(
@@ -190,7 +244,12 @@ def print_fold_summary(folds_df: pd.DataFrame) -> None:
             f"{val_c0:<12} | {val_c1:<12} | {pos_ratio:<12.2%}"
         )
     print("=" * 70)
-    print("Verification: All folds strictly disjoint, identical size & balanced stratification.")
+    # Report the outcome of the actual checks rather than a fixed message.
+    try:
+        _validate_folds(folds_df, n_splits)
+        print("Verification: OK - full coverage, even fold sizes, stratified class balance.")
+    except ValueError as err:
+        print(f"Verification: FAILED - {err}")
     print("=" * 70)
 
 
@@ -200,7 +259,7 @@ if __name__ == "__main__":
     print_fold_summary(df_folds)
 
     print("\n[2/2] Testing get_folds() iteration helper...")
-    for fold, train_idx, val_idx in get_folds(df_folds):
+    for fold, train_idx, val_idx in get_folds(df_folds, ids=df_folds[ID_COL]):
         print(f"  -> Fold {fold}: {len(train_idx)} train samples, {len(val_idx)} validation samples.")
 
     print("\n[OK] Cross-validation foundation is ready and saved for team branch usage.")
