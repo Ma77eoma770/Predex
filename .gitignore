@@ -20,3 +20,6 @@ outputs/*
 # Data files
 raw_data/*
 !raw_data/.gitkeep
+data/features/*
+!data/features/.gitkeep
+*.parquet

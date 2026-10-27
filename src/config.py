@@ -19,6 +19,9 @@ SAMPLE_SUBMISSION_CSV = RAW_DATA_DIR / "sample_submission.csv"
 
 # Cross-Validation & Processed Data
 FOLDS_CSV = DATA_DIR / "train_folds.csv"
+FEATURES_DIR = DATA_DIR / "features"
+TRAIN_FEATURES_PARQUET = FEATURES_DIR / "train_features.parquet"
+TEST_FEATURES_PARQUET = FEATURES_DIR / "test_features.parquet"
 
 # Global Cross-Validation & Experiment Parameters
 RANDOM_STATE = 42
@@ -29,3 +32,4 @@ ID_COL = "battle_id"
 # Ensure output directories exist
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
+FEATURES_DIR.mkdir(parents=True, exist_ok=True)
