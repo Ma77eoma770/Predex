@@ -18,4 +18,5 @@ outputs/*
 !outputs/.gitkeep
 
 # Data files
-raw_data/
+raw_data/*
+!raw_data/.gitkeep
