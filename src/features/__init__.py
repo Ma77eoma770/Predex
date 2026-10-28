@@ -9,8 +9,10 @@ from src.features.registry import (
 )
 from src.features.selectors import (
     DropCollinearFeatures,
+    RFImportanceSelector,
     filter_by_prefix,
     create_linear_preprocessing_pipeline,
+    create_rf_preprocessing_pipeline,
 )
 from src.features.modules.f_baseline import extract_features as _extract_baseline
 from src.features.registry import build_feature_dataframe
@@ -43,6 +45,7 @@ __all__ = [
     "DropCollinearFeatures",
     "filter_by_prefix",
     "create_linear_preprocessing_pipeline",
+    "create_rf_preprocessing_pipeline",
     "extract_features_from_battle",
     "build_dataset",
 ]
