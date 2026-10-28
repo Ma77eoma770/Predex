@@ -30,7 +30,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.svm import SVC
 
 from src.config import ID_COL, OUTPUTS_DIR, TARGET_COL
-from src.evaluation import get_cv_splits, log_result
+from src.evaluation import get_cv_splits, log_result, paired_comparison
 from src.features import filter_by_prefix, load_master_features
 from src.features.preprocessing import build_preprocessor
 from src.models.train_linear_svc import (
@@ -171,12 +171,10 @@ def run_experiment(log: bool, yes: bool) -> None:
         linear = cross_validate(build_svc_pipeline(C=LINEAR_REF_C), X, y, cv=splits, scoring="accuracy", n_jobs=-1)
     lin_scores = linear["test_score"]
     rbf_scores = np.array([best[f"split{i}_test_score"] for i in range(n_folds)])
-    # Both models are scored on the same 1,000 battles per fold: a "hard" fold is hard for
-    # both, and the per-fold difference cancels that shared noise.
-    d = rbf_scores - lin_scores
-    ties = np.isclose(d, 0)
-    wins, losses = int(((d > 0) & ~ties).sum()), int(((d < 0) & ~ties).sum())
-    mean_d_pt, std_d_pt = d.mean() * 100, d.std() * 100  # ddof=0, as everywhere in the repo
+    # Both models are scored on the same 1,000 battles per fold (see paired_comparison).
+    paired = paired_comparison(rbf_scores, lin_scores, n_train=len(splits[0][0]), n_test=len(splits[0][1]))
+    d, wins, losses = paired["d"], paired["wins"], paired["losses"]
+    mean_d_pt, std_d_pt = paired["mean_d"] * 100, paired["std_d"] * 100
 
     print(f"\n[3] Paired comparison: RBF (C={best_C:g}, gamma={best_gamma:g}) vs LinearSVC (C={LINEAR_REF_C:g})")
     print("-" * 70)
@@ -185,7 +183,7 @@ def run_experiment(log: bool, yes: bool) -> None:
         print(f"{i:>4} | {rbf_scores[i]:>8.2%} | {lin_scores[i]:>8.2%} | {d[i] * 100:>+7.2f}")
     print("-" * 70)
     print(f"LinearSVC mean: {lin_scores.mean():.4%} +/- {lin_scores.std():.4%}")
-    print(f"Mean d: {mean_d_pt:+.2f} pt +/- {std_d_pt:.2f} | RBF wins {wins}, ties {int(ties.sum())}, loses {losses} (of {n_folds})")
+    print(f"Mean d: {mean_d_pt:+.2f} pt +/- {std_d_pt:.2f} | RBF wins {wins}, ties {paired['ties']}, loses {losses} (of {n_folds})")
 
     # Neighbours of the best cell: if they also beat the linear model, the gain is not a lucky pick
     # among 25 combinations (the best score is optimistic because it was chosen on these folds).
