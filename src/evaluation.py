@@ -11,6 +11,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
+from scipy import stats
 
 from src.config import PROJECT_ROOT
 from src.cross_validation import get_folds, load_folds
@@ -38,6 +39,52 @@ def get_cv_splits(X: pd.DataFrame, folds_df: Optional[pd.DataFrame] = None) -> L
     cross_validate and cross_val_predict.
     """
     return [(train_idx, val_idx) for _, train_idx, val_idx in get_folds(folds_df, ids=X.index)]
+
+
+def paired_comparison(
+    scores_new: np.ndarray,
+    scores_ref: np.ndarray,
+    n_train: int,
+    n_test: int,
+) -> Dict[str, Any]:
+    """Compare two models fold by fold on the same splits.
+
+    Both score arrays must come from the same folds, in the same order: a "hard" fold is
+    hard for both models, and the per-fold difference cancels that shared noise.
+
+    Returns the per-fold differences d (new - ref), their mean and std (ddof=0, as in the
+    rest of the repo), wins/ties/losses of the new model, and the Nadeau-Bengio corrected
+    paired t-test. A plain paired t-test treats the k folds as independent, but the training
+    sets overlap (~89% with 10 folds), so the differences are correlated and their variance
+    is underestimated; the correction inflates it by n_test/n_train:
+        t = mean(d) / sqrt((1/k + n_test/n_train) * var(d, ddof=1))
+    `p_value` is one-sided (H1: the new model is better), with k - 1 degrees of freedom.
+    """
+    scores_new = np.asarray(scores_new, dtype=float)
+    scores_ref = np.asarray(scores_ref, dtype=float)
+    if scores_new.shape != scores_ref.shape:
+        raise ValueError(f"Score arrays differ in shape: {scores_new.shape} vs {scores_ref.shape}")
+
+    d = scores_new - scores_ref
+    k = len(d)
+    ties = np.isclose(d, 0)
+    var_d = d.var(ddof=1)
+    if var_d > 0:
+        t_stat = d.mean() / np.sqrt((1 / k + n_test / n_train) * var_d)
+    else:
+        # Identical differences on every fold: no spread to test against.
+        t_stat = 0.0 if np.isclose(d.mean(), 0) else np.inf * np.sign(d.mean())
+
+    return {
+        "d": d,
+        "mean_d": d.mean(),
+        "std_d": d.std(),
+        "wins": int(((d > 0) & ~ties).sum()),
+        "ties": int(ties.sum()),
+        "losses": int(((d < 0) & ~ties).sum()),
+        "t_corrected": float(t_stat),
+        "p_value": float(stats.t.sf(t_stat, df=k - 1)),
+    }
 
 
 def log_result(
