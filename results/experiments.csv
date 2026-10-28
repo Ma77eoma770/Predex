@@ -1,0 +1,4 @@
+date,person,model,feature_version,hyperparams,cv_mean_acc,cv_std_acc,n_folds,notes
+2026-10-28,B,LinearSVC,v1_bs_tl,"{""C"": 0.1, ""C_grid"": [0.001, 0.01, 0.1, 1, 10], ""dual"": false, ""max_iter"": 10000, ""prep"": ""build_preprocessor""}",0.66600,0.00924,10,best C from grid search on the same folds
+2026-10-28,B,LogisticRegression (team baseline),v1_bs_tl,"{""C"": 1.0, ""max_iter"": 5000, ""prep"": ""create_linear_preprocessing_pipeline(drop_collinear=True, 0.95)"", ""solver"": ""lbfgs""}",0.66560,0.01054,10,
+2026-10-28,B,LogisticRegression,v1_bs_tl,"{""C"": 1.0, ""max_iter"": 5000, ""prep"": ""build_preprocessor"", ""solver"": ""lbfgs""}",0.66580,0.01099,10,
