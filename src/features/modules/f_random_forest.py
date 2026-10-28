@@ -53,6 +53,20 @@ SPECIAL_TYPES: Set[str] = {
     "ice", "dragon", "dark"
 }
 
+# Smogon Gen 2 OU Viability Rankings (Tier Power Index)
+GEN2_OU_VIABILITY: Dict[str, float] = {
+    "snorlax": 100.0,
+    "zapdos": 88.0, "raikou": 85.0, "cloyster": 84.0,
+    "skarmory": 80.0, "suicune": 80.0, "tyranitar": 78.0,
+    "gengar": 75.0, "marowak": 75.0, "starmie": 73.0, "exeggutor": 72.0,
+    "forretress": 70.0, "miltank": 70.0, "nidoking": 68.0, "machamp": 68.0,
+    "heracross": 62.0, "vaporeon": 62.0, "umbreon": 60.0, "misdreavus": 60.0,
+    "steelix": 58.0, "rhydon": 56.0, "blissey": 55.0, "jynx": 55.0, "jolteon": 55.0,
+    "charizard": 45.0, "meganium": 42.0, "porygon2": 40.0, "golem": 40.0, "clefable": 38.0, "dragonite": 50.0,
+}
+DEFAULT_OU_VIABILITY: float = 65.0
+DEFAULT_UNLISTED_VIABILITY: float = 25.0
+
 # ---------------------------------------------------------------------------
 # Type Chart & Pokedex In-Memory Cache
 # ---------------------------------------------------------------------------
@@ -931,34 +945,13 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     feat[f"{PREFIX}p2_active_is_paralyzed"] = float(p2_act_is_paralyzed)
     feat[f"{PREFIX}diff_active_paralyzed"] = float(p1_act_is_paralyzed - p2_act_is_paralyzed)
 
-    feat[f"{PREFIX}p1_active_is_frozen"] = float(p1_act_is_frozen)
-    feat[f"{PREFIX}p2_active_is_frozen"] = float(p2_act_is_frozen)
-    feat[f"{PREFIX}diff_active_frozen"] = float(p1_act_is_frozen - p2_act_is_frozen)
-
     feat[f"{PREFIX}p1_active_is_toxic"] = float(p1_act_is_toxic)
     feat[f"{PREFIX}p2_active_is_toxic"] = float(p2_act_is_toxic)
     feat[f"{PREFIX}diff_active_toxic"] = float(p1_act_is_toxic - p2_act_is_toxic)
 
-    feat[f"{PREFIX}p1_active_is_burned"] = float(p1_act_is_burned)
-    feat[f"{PREFIX}p2_active_is_burned"] = float(p2_act_is_burned)
-    feat[f"{PREFIX}diff_active_burned"] = float(p1_act_is_burned - p2_act_is_burned)
-
     feat[f"{PREFIX}p1_t30_has_substitute"] = float(p1_has_substitute)
     feat[f"{PREFIX}p2_t30_has_substitute"] = float(p2_has_substitute)
     feat[f"{PREFIX}diff_t30_substitute"] = float(p1_has_substitute - p2_has_substitute)
-
-    feat[f"{PREFIX}p1_t30_has_leechseed"] = float(p1_has_leechseed)
-    feat[f"{PREFIX}p2_t30_has_leechseed"] = float(p2_has_leechseed)
-    feat[f"{PREFIX}diff_t30_leechseed"] = float(p1_has_leechseed - p2_has_leechseed)
-
-    feat[f"{PREFIX}p1_t30_is_confused"] = float(p1_is_confused)
-    feat[f"{PREFIX}p2_t30_is_confused"] = float(p2_is_confused)
-    feat[f"{PREFIX}diff_t30_confused"] = float(p1_is_confused - p2_is_confused)
-
-    feat[f"{PREFIX}p1_t30_is_trapped"] = float(p1_is_trapped)
-    feat[f"{PREFIX}p2_t30_is_trapped"] = float(p2_is_trapped)
-    feat[f"{PREFIX}p1_t30_is_perish"] = float(p1_is_perish)
-    feat[f"{PREFIX}p2_t30_is_perish"] = float(p2_is_perish)
 
     # =========================================================================
     # 5. ASSE E: TIMELINE MOVES (Damage Volume & Stall Ratio)
@@ -1110,12 +1103,6 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     feat[f"{PREFIX}p2_act_effective_sweeper"] = float(p2_act_eff_sweeper)
     feat[f"{PREFIX}diff_act_effective_sweeper"] = float(p1_act_eff_sweeper - p2_act_eff_sweeper)
 
-    p1_fragile_sweeper = 1.0 if (p1_sweeper_index >= 3.0 and 0.0 < p1_hp_t30 <= 0.20) else 0.0
-    p2_fragile_sweeper = 1.0 if (p2_sweeper_index >= 3.0 and 0.0 < p2_hp_t30 <= 0.20) else 0.0
-    feat[f"{PREFIX}p1_fragile_sweeper"] = float(p1_fragile_sweeper)
-    feat[f"{PREFIX}p2_fragile_sweeper"] = float(p2_fragile_sweeper)
-    feat[f"{PREFIX}diff_fragile_sweeper"] = float(p2_fragile_sweeper - p1_fragile_sweeper)
-
     # B. Defensive Wall Index (Def + SpD boosts)
     p1_wall_index = (max(0.0, p1_def_b) + max(0.0, p1_spd_b)) if not p1_act_is_fnt else 0.0
     p2_wall_index = (max(0.0, p2_def_b) + max(0.0, p2_spd_b)) if not p2_act_is_fnt else 0.0
@@ -1210,6 +1197,13 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     feat[f"{PREFIX}p1_explosion_net_efficiency"] = float(p1_effective_explosion)
     feat[f"{PREFIX}p2_explosion_net_efficiency"] = float(p2_effective_explosion)
     feat[f"{PREFIX}diff_explosion_net_efficiency"] = float(p1_effective_explosion - p2_effective_explosion)
+
+    # Smogon Gen 2 OU Viability Power Index of surviving Pokémon
+    p1_alive_viability = sum(GEN2_OU_VIABILITY.get(p.get("name", "").strip().lower(), DEFAULT_UNLISTED_VIABILITY) for p in p1_team if p.get("name", "").strip().lower() not in p1_fainted) / 100.0
+    p2_alive_viability = (sum(GEN2_OU_VIABILITY.get(n, DEFAULT_UNLISTED_VIABILITY) for n in p2_seen_names if n not in p2_fainted) + (p2_unrevealed * DEFAULT_OU_VIABILITY)) / 100.0
+    feat[f"{PREFIX}p1_alive_viability"] = float(p1_alive_viability)
+    feat[f"{PREFIX}p2_alive_viability"] = float(p2_alive_viability)
+    feat[f"{PREFIX}diff_alive_viability"] = float(p1_alive_viability - p2_alive_viability)
 
     # E. Macro Offensive Dominance Indices
     p1_phys_dom = p1_alive_stats["atk"] / max(1.0, p2_alive_stats["def"])
@@ -1367,23 +1361,14 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     feat[f"{PREFIX}p2_act_streak"] = float(p2_act_streak)
     feat[f"{PREFIX}diff_act_streak"] = float(p1_act_streak - p2_act_streak)
 
-    # 6. Detailed Active Boosts (Positive vs Negative totals)
+    # 6. Key Active Stage Boosts
     feat[f"{PREFIX}p1_act_boost_atk_val"] = float(p1_atk_b)
-    feat[f"{PREFIX}p1_act_boost_def_val"] = float(p1_def_b)
-    feat[f"{PREFIX}p1_act_boost_spa_val"] = float(p1_spa_b)
-    feat[f"{PREFIX}p1_act_boost_spd_val"] = float(p1_spd_b)
     feat[f"{PREFIX}p1_act_boost_spe_val"] = float(p1_spe_b)
 
     feat[f"{PREFIX}p2_act_boost_atk_val"] = float(p2_atk_b)
-    feat[f"{PREFIX}p2_act_boost_def_val"] = float(p2_def_b)
-    feat[f"{PREFIX}p2_act_boost_spa_val"] = float(p2_spa_b)
-    feat[f"{PREFIX}p2_act_boost_spd_val"] = float(p2_spd_b)
     feat[f"{PREFIX}p2_act_boost_spe_val"] = float(p2_spe_b)
 
     feat[f"{PREFIX}diff_act_boost_atk"] = float(p1_atk_b - p2_atk_b)
-    feat[f"{PREFIX}diff_act_boost_def"] = float(p1_def_b - p2_def_b)
-    feat[f"{PREFIX}diff_act_boost_spa"] = float(p1_spa_b - p2_spa_b)
-    feat[f"{PREFIX}diff_act_boost_spd"] = float(p1_spd_b - p2_spd_b)
     feat[f"{PREFIX}diff_act_boost_spe"] = float(p1_spe_b - p2_spe_b)
 
     p1_pos_boosts = sum(max(0.0, b) for b in (p1_atk_b, p1_def_b, p1_spa_b, p1_spd_b, p1_spe_b))
@@ -1468,21 +1453,14 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     feat[f"{PREFIX}p2_setup_vulnerable_to_phazing"] = float(p2_vuln_phazing)
     feat[f"{PREFIX}diff_setup_vulnerable_to_phazing"] = float(p2_vuln_phazing - p1_vuln_phazing)
 
-    # 5. Rest Sleep Lock Status (Wake-up Vulnerability)
-    p1_rest_locked = 2.0 if (p1_last_rest_turn == 30) else (1.0 if p1_last_rest_turn == 29 else 0.0)
-    p2_rest_locked = 2.0 if (p2_last_rest_turn == 30) else (1.0 if p2_last_rest_turn == 29 else 0.0)
-    feat[f"{PREFIX}p1_rest_sleep_locked"] = float(p1_rest_locked)
-    feat[f"{PREFIX}p2_rest_sleep_locked"] = float(p2_rest_locked)
-    feat[f"{PREFIX}diff_rest_sleep_locked"] = float(p2_rest_locked - p1_rest_locked)
-
-    # 6. Toxic Acceleration Burnout
+    # 5. Toxic Acceleration Burnout
     p1_tox_dmg = (min(1.0, (p1_act_toxic_streak + 1) * 0.0625)) if p1_act_is_toxic else 0.0
     p2_tox_dmg = (min(1.0, (p2_act_toxic_streak + 1) * 0.0625)) if p2_act_is_toxic else 0.0
     feat[f"{PREFIX}p1_act_toxic_next_turn_dmg"] = float(p1_tox_dmg)
     feat[f"{PREFIX}p2_act_toxic_next_turn_dmg"] = float(p2_tox_dmg)
     feat[f"{PREFIX}diff_act_toxic_next_turn_dmg"] = float(p2_tox_dmg - p1_tox_dmg)
 
-    # 7. Spikes Grounded Exposure Differential
+    # 6. Spikes Grounded Exposure Differential
     p1_switches_total = p1_switches_t1_10 + p1_switches_t11_20 + p1_switches_late
     p2_switches_total = p2_switches_t1_10 + p2_switches_t11_20 + p2_switches_late
     p1_spikes_fric = p2_spikes_set * p1_alive_grounded * (p1_switches_total / 30.0)
@@ -1491,17 +1469,75 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     feat[f"{PREFIX}p2_grounded_spikes_exposure"] = float(p2_spikes_fric)
     feat[f"{PREFIX}diff_grounded_spikes_exposure"] = float(p2_spikes_fric - p1_spikes_fric)
 
-    # 8. Paralysis Speed Inversion
+    # 7. Paralysis Speed Inversion
     p1_par_inv = 1.0 if (p1_base_spe > p2_base_spe and p1_act_speed_est < p2_act_speed_est and not p1_act_is_fnt) else 0.0
     p2_par_inv = 1.0 if (p2_base_spe > p1_base_spe and p2_act_speed_est < p1_act_speed_est and not p2_act_is_fnt) else 0.0
     feat[f"{PREFIX}p1_par_inversion"] = float(p1_par_inv)
     feat[f"{PREFIX}p2_par_inversion"] = float(p2_par_inv)
     feat[f"{PREFIX}diff_par_inversion"] = float(p2_par_inv - p1_par_inv)
 
-    # 9. Leftovers Recovery Hegemony vs Alive Bulk
-    feat[f"{PREFIX}p1_leftovers_hegemony_vs_bulk"] = float(p1_lefties_hp_est / max(1.0, p1_effective_bulk_hp))
+    # 8. NEW: Speed Monopoly (Taking into account Gen 2 75% Paralysis speed penalty)
+    p1_alive_eff_speeds = []
+    for p in p1_team:
+        pname = p.get("name", "").strip().lower()
+        if pname not in p1_fainted:
+            b_spe = float(p.get("base_spe", 80))
+            par_p = 0.25 if (p1_last_status.get(pname) == "par") else 1.0
+            boost_p = STAGE_MULT.get(int(max(-6, min(6, p1_spe_b))), 1.0) if (pname == p1_act_name and not p1_act_is_fnt) else 1.0
+            p1_alive_eff_speeds.append(b_spe * par_p * boost_p)
 
-    # 10. Macro Offensive Pressure vs Opponent Effective Bulk
+    p2_alive_eff_speeds = []
+    for name in p2_seen_names:
+        if name not in p2_fainted:
+            st = _lookup_stats(name, pokedex)
+            b_spe = float(st.get("base_spe", 80))
+            par_p = 0.25 if (p2_last_status.get(name) == "par") else 1.0
+            boost_p = STAGE_MULT.get(int(max(-6, min(6, p2_spe_b))), 1.0) if (name == p2_act_name and not p2_act_is_fnt) else 1.0
+            p2_alive_eff_speeds.append(b_spe * par_p * boost_p)
+    if p2_unrevealed > 0:
+        p2_alive_eff_speeds.append(85.0)
+
+    p1_max_spe = max(p1_alive_eff_speeds) if p1_alive_eff_speeds else 0.0
+    p2_max_spe = max(p2_alive_eff_speeds) if p2_alive_eff_speeds else 0.0
+    feat[f"{PREFIX}p1_max_alive_speed"] = float(p1_max_spe / 100.0)
+    feat[f"{PREFIX}p2_max_alive_speed"] = float(p2_max_spe / 100.0)
+    feat[f"{PREFIX}diff_max_alive_speed"] = float((p1_max_spe - p2_max_spe) / 100.0)
+    p1_spe_monopoly = 1.0 if (p1_max_spe >= p2_max_spe + 15.0) else 0.0
+    p2_spe_monopoly = 1.0 if (p2_max_spe >= p1_max_spe + 15.0) else 0.0
+    feat[f"{PREFIX}diff_speed_monopoly"] = float(p1_spe_monopoly - p2_spe_monopoly)
+
+    # 9. NEW: Defensive Stalling Wall Lock (Skarmory / Steelix without super-effective answers)
+    p1_has_skarmory = ("skarmory" in p1_team_names and "skarmory" not in p1_fainted and p1_last_hp.get("skarmory", 0.0) >= 0.35)
+    p2_has_skarmory = ("skarmory" in p2_seen_names and "skarmory" not in p2_fainted and p2_last_hp.get("skarmory", 0.0) >= 0.35)
+    p2_has_fire_elec = any("fire" in [t.lower() for t in _lookup_stats(n, pokedex).get("types", [])] or "electric" in [t.lower() for t in _lookup_stats(n, pokedex).get("types", [])] for n in p2_seen_names if n not in p2_fainted)
+    p1_has_fire_elec = any("fire" in [t.lower() for t in p.get("types", [])] or "electric" in [t.lower() for t in p.get("types", [])] for p in p1_team if p.get("name", "").strip().lower() not in p1_fainted)
+    p1_wall_lock = 1.0 if (p1_has_skarmory and not p2_has_fire_elec and p2_unrevealed == 0) else (0.5 if (p1_has_skarmory and not p2_has_fire_elec) else 0.0)
+    p2_wall_lock = 1.0 if (p2_has_skarmory and not p1_has_fire_elec) else 0.0
+    feat[f"{PREFIX}p1_defensive_wall_lock"] = float(p1_wall_lock)
+    feat[f"{PREFIX}p2_defensive_wall_lock"] = float(p2_wall_lock)
+    feat[f"{PREFIX}diff_defensive_wall_lock"] = float(p1_wall_lock - p2_wall_lock)
+
+    # 10. NEW: Permanent Spikes vs Dead Rapid Spinner (Cloyster, Forretress, Starmie)
+    spinners = {"cloyster", "forretress", "starmie"}
+    p1_spinners_alive = sum(1 for p in p1_team if p.get("name", "").strip().lower() in spinners and p.get("name", "").strip().lower() not in p1_fainted)
+    p2_spinners_alive = sum(1 for n in p2_seen_names if n in spinners and n not in p2_fainted)
+    p1_perm_spikes = 1.0 if (p1_spikes_set and p2_spinners_alive == 0 and p2_unrevealed == 0) else (0.5 if (p1_spikes_set and p2_spinners_alive == 0) else 0.0)
+    p2_perm_spikes = 1.0 if (p2_spikes_set and p1_spinners_alive == 0) else 0.0
+    feat[f"{PREFIX}p1_permanent_spikes_active"] = float(p1_perm_spikes)
+    feat[f"{PREFIX}p2_permanent_spikes_active"] = float(p2_perm_spikes)
+    feat[f"{PREFIX}diff_permanent_spikes_active"] = float(p1_perm_spikes - p2_perm_spikes)
+
+    # 11. NEW: Phazing Defense vs Opponent Setup Boosts (Roar / Whirlwind wipes stat stages)
+    phazers = {"skarmory", "suicune", "raikou", "zapdos", "steelix", "tyranitar"}
+    p1_has_phazer = any((p.get("name", "").strip().lower() in phazers or p1_phazing_count > 0) and p.get("name", "").strip().lower() not in p1_fainted for p in p1_team)
+    p2_has_phazer = any((n in phazers or p2_phazing_count > 0) and n not in p2_fainted for n in p2_seen_names)
+    p1_phazing_denial = 1.0 if (p2_pos_boosts >= 2.0 and p1_has_phazer) else 0.0
+    p2_phazing_denial = 1.0 if (p1_pos_boosts >= 2.0 and p2_has_phazer) else 0.0
+    feat[f"{PREFIX}p1_phazing_denial_ready"] = float(p1_phazing_denial)
+    feat[f"{PREFIX}p2_phazing_denial_ready"] = float(p2_phazing_denial)
+    feat[f"{PREFIX}diff_phazing_denial_ready"] = float(p1_phazing_denial - p2_phazing_denial)
+
+    # 12. Macro Offensive Pressure vs Opponent Effective Bulk
     p1_alive_firepower = sum(max(float(p.get("base_atk", 80)), float(p.get("base_spa", 80))) for p in p1_team if p.get("name", "").strip().lower() not in p1_fainted)
     p2_alive_firepower = sum(max(float(stats.get("base_atk", 80)), float(stats.get("base_spa", 80))) for name in p2_seen_names if name not in p2_fainted for stats in [_lookup_stats(name, pokedex)]) + (p2_unrevealed * 85.0)
 
@@ -1510,12 +1546,6 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     feat[f"{PREFIX}p1_macro_pressure_ratio"] = float(p1_macro_press)
     feat[f"{PREFIX}p2_macro_pressure_ratio"] = float(p2_macro_press)
     feat[f"{PREFIX}diff_macro_pressure_ratio"] = float(p1_macro_press - p2_macro_press)
-
-    # 11. Endgame Deterministic Micro-Duel
-    is_duel = 1.0 if (p1_alive <= 2 and p2_alive_total_count <= 2) else 0.0
-    feat[f"{PREFIX}is_endgame_duel"] = float(is_duel)
-    feat[f"{PREFIX}endgame_duel_hp_diff"] = float((p1_total_hp - p2_total_hp) * is_duel)
-    feat[f"{PREFIX}endgame_duel_type_eff"] = float((p1_t30_type_eff - p2_t30_type_eff) * is_duel)
 
     # 12. Defensive Blindspot Exploitation by Opponent
     p1_blindspots_types = [t for t in GEN2_TYPES if sum(1 for p in p1_team if _defensive_multiplier(t, p.get("types", []), chart) > 1.0) >= 3]

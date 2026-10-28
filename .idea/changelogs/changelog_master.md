@@ -114,3 +114,26 @@ Il progetto è progredito attraverso 7 versioni principali, evolvendo sia l'arch
   - **Mean ROC-AUC**: **0.7349**
   - **Brier Score**: **0.2084**
 
+---
+
+## [v9.0] - Metagame Viability Tiering & Advanced Tree Pruning (Decision Trees Only)
+- **Data**: 28 Ottobre 2026
+- **Architettura**: Foresta di Decision Trees Pura (`RandomForestClassifier`, 500 alberi, `max_depth=12`, `min_samples_leaf=6`, `max_features='sqrt'`).
+- **Feature Store**: 454 feature pulite (rimosse 26 feature a importanza zero e 6 duplicati collineari).
+- **Nuove Meccaniche Integrate**:
+  1. `rf_diff_alive_viability`: Smogon Gen 2 OU Viability Tier Power Index (Snorlax 100, Zapdos/Raikou 85+, ecc.) sui Pokémon rimasti in vita. Entrata direttamente al 16° posto assoluto per importanza su tutto il modello.
+  2. `rf_diff_speed_monopoly`: Controllo deterministico dell'egemonia di velocità fra i superstiti (tenendo conto della penalità del -75% da paralisi).
+  3. `rf_diff_defensive_wall_lock`: Rilevamento di wall difensivi (Skarmory/Steelix) contro squadre avversarie prive di risposte superefficaci.
+  4. `rf_diff_permanent_spikes_active`: Spikes permanenti in caso di assenza o KO di tutti i Rapid Spinner avversari (Cloyster, Forretress, Starmie).
+  5. `rf_diff_phazing_denial_ready`: Neutralizzazione dei boost avversari di Curse/Belly Drum tramite presenza di un phazer difensivo (Roar/Whirlwind).
+- **Esclusioni Effettuate su Richiesta Utente**:
+  - Rimossa la proposta sul Rest Sleep Lock.
+  - Rimossi status a importanza zero (burn/freeze/perish/leechseed/confusion a t30).
+  - Rimossi duplicati collineari esatti (`p1_team_mean_base_*`, `leftovers_healed_est`).
+- **Metriche Riscontrate**:
+  - **ROC-AUC**: **0.7360** (nuovo record di discriminazione probabilistica)
+  - **Brier Score**: **0.2081** (calibrazione migliorata)
+  - **Fold 3**: **70.0000%**, **Fold 1**: **68.6000%**, **Fold 8**: **68.1000%**
+  - **Mean CV Accuracy**: **66.9200% - 67.2700%** (a seconda del noise pruning threshold)
+
+
