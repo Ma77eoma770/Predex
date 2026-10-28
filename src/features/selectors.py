@@ -86,3 +86,96 @@ def create_linear_preprocessing_pipeline(
         steps.append(("k_best", SelectKBest(score_func=f_classif, k=k_best)))
 
     return Pipeline(steps)
+
+
+class RFImportanceSelector(BaseEstimator, TransformerMixin):
+    """Prunes noisy features by selecting the top-K most important features via a fast Random Forest.
+
+    Fitted strictly on training folds to eliminate data leakage.
+    Ensures that during tree splits, sampling m = sqrt(p) picks from highly informative predictors.
+    """
+
+    def __init__(
+        self,
+        top_k: int = 45,
+        n_estimators: int = 100,
+        max_depth: int = 12,
+        random_state: int = 42,
+    ):
+        self.top_k = top_k
+        self.n_estimators = n_estimators
+        self.max_depth = max_depth
+        self.random_state = random_state
+        self.selected_columns_: List[str] = []
+        self.selected_indices_: List[int] = []
+        self.feature_names_in_: List[str] = []
+
+    def fit(self, X, y):
+        from sklearn.ensemble import RandomForestClassifier
+
+        if isinstance(X, pd.DataFrame):
+            self.feature_names_in_ = list(X.columns)
+            X_arr = X.values
+        else:
+            self.feature_names_in_ = [f"feat_{i}" for i in range(X.shape[1])]
+            X_arr = X
+
+        total_feats = X_arr.shape[1]
+        if self.top_k is None or self.top_k <= 0 or self.top_k >= total_feats:
+            self.selected_indices_ = list(range(total_feats))
+            self.selected_columns_ = list(self.feature_names_in_)
+            return self
+
+        selector_rf = RandomForestClassifier(
+            n_estimators=self.n_estimators,
+            max_depth=self.max_depth,
+            min_samples_leaf=4,
+            random_state=self.random_state,
+            n_jobs=-1,
+        )
+        selector_rf.fit(X_arr, y)
+        importances = selector_rf.feature_importances_
+        sorted_idx = np.argsort(importances)[::-1]
+        self.selected_indices_ = sorted_idx[: self.top_k].tolist()
+        self.selected_columns_ = [self.feature_names_in_[i] for i in self.selected_indices_]
+        return self
+
+    def transform(self, X):
+        if isinstance(X, pd.DataFrame):
+            if all(c in X.columns for c in self.selected_columns_):
+                return X[self.selected_columns_]
+            return X.iloc[:, self.selected_indices_]
+        return pd.DataFrame(X[:, self.selected_indices_], columns=self.selected_columns_)
+
+
+def create_rf_preprocessing_pipeline(
+    variance_threshold: float = 0.0,
+    top_k_features: Optional[int] = None,
+    random_state: int = 42,
+) -> Pipeline:
+    """Build a leakage-free preprocessing pipeline tailored for Random Forest and tree ensembles.
+
+    Notice: No feature scaling (StandardScaler) is applied since decision trees are scale-invariant.
+    Removes zero-variance (constant) features and applies feature pruning (top_k_features) strictly inside folds.
+    """
+    vt = VarianceThreshold(threshold=variance_threshold)
+    vt.set_output(transform="pandas")
+    steps = [
+        ("variance_filter", vt),
+    ]
+
+    if top_k_features is not None and top_k_features > 0:
+        steps.append((
+            "importance_pruner",
+            RFImportanceSelector(
+                top_k=top_k_features,
+                n_estimators=100,
+                max_depth=12,
+                random_state=random_state,
+            ),
+        ))
+
+    return Pipeline(steps)
+
+
+

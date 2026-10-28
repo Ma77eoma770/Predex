@@ -44,13 +44,26 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
         p1_last_hp = float(p1_state.get("hp_pct", 100.0))
         p2_last_hp = float(p2_state.get("hp_pct", 100.0))
 
+        p1_fnt_names = set()
+        p2_fnt_names = set()
         for t in timeline:
             p1_t = t.get("p1_pokemon_state", {})
             p2_t = t.get("p2_pokemon_state", {})
-            if p1_t.get("hp_pct", 100.0) == 0:
-                p1_ko_count += 1
-            if p2_t.get("hp_pct", 100.0) == 0:
-                p2_ko_count += 1
+            p1_n = p1_t.get("name")
+            p2_n = p2_t.get("name")
+            if p1_n and (float(p1_t.get("hp_pct", 100.0)) <= 0.001 or p1_t.get("status") == "fnt"):
+                p1_fnt_names.add(p1_n)
+            if p2_n and (float(p2_t.get("hp_pct", 100.0)) <= 0.001 or p2_t.get("status") == "fnt"):
+                p2_fnt_names.add(p2_n)
+
+        p1_ko_count = len(p1_fnt_names)
+        p2_ko_count = len(p2_fnt_names)
+
+        # Zero out active hp if active pokemon is fainted
+        if p1_state.get("name") in p1_fnt_names or p1_state.get("status") == "fnt":
+            p1_last_hp = 0.0
+        if p2_state.get("name") in p2_fnt_names or p2_state.get("status") == "fnt":
+            p2_last_hp = 0.0
 
     feat[f"{PREFIX}p1_active_hp_turn30"] = p1_last_hp
     feat[f"{PREFIX}p2_active_hp_turn30"] = p2_last_hp

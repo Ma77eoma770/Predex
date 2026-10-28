@@ -52,8 +52,10 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
             p1_hp = float(p1_st.get("hp_pct", 1.0))
             p1_last_hp[p1_name] = p1_hp
             p1_last_status[p1_name] = p1_st.get("status", "nostatus")
-            if p1_hp == 0.0 or p1_st.get("status") == "fnt":
+            if p1_hp <= 0.001 or p1_st.get("status") == "fnt" or p1_name in p1_fainted:
                 p1_fainted.add(p1_name)
+                p1_last_hp[p1_name] = 0.0
+                p1_last_status[p1_name] = "fnt"
 
         if p2_name:
             p2_seen_names.add(p2_name)
@@ -63,8 +65,10 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
             p2_hp = float(p2_st.get("hp_pct", 1.0))
             p2_last_hp[p2_name] = p2_hp
             p2_last_status[p2_name] = p2_st.get("status", "nostatus")
-            if p2_hp == 0.0 or p2_st.get("status") == "fnt":
+            if p2_hp <= 0.001 or p2_st.get("status") == "fnt" or p2_name in p2_fainted:
                 p2_fainted.add(p2_name)
+                p2_last_hp[p2_name] = 0.0
+                p2_last_status[p2_name] = "fnt"
 
     # 1. Alive / Fainted counts
     p1_fainted_count = len(p1_fainted)
@@ -82,6 +86,12 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     p2_unrevealed = max(0, 6 - len(p2_seen_names))
     feat[f"{PREFIX}p2_revealed_count"] = float(len(p2_seen_names))
     feat[f"{PREFIX}p2_unrevealed_count"] = float(p2_unrevealed)
+
+    # Ensure fainted pokemon are strictly at 0.0 HP
+    for name in p1_fainted:
+        p1_last_hp[name] = 0.0
+    for name in p2_fainted:
+        p2_last_hp[name] = 0.0
 
     # 3. Total Team HP % (known + assumed 1.0 for unrevealed)
     p1_total_hp = sum(p1_last_hp.values())
@@ -102,8 +112,18 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
         p1_act = last_t.get("p1_pokemon_state", {})
         p2_act = last_t.get("p2_pokemon_state", {})
 
-        p1_boosts = p1_act.get("boosts", {})
-        p2_boosts = p2_act.get("boosts", {})
+        p1_hp_t30 = float(p1_act.get("hp_pct", 1.0))
+        p2_hp_t30 = float(p2_act.get("hp_pct", 1.0))
+        p1_act_name = p1_act.get("name", "").strip().lower()
+        p2_act_name = p2_act.get("name", "").strip().lower()
+        p1_fnt_t30 = 1.0 if (p1_hp_t30 == 0.0 or p1_act.get("status") == "fnt" or p1_act_name in p1_fainted) else 0.0
+        p2_fnt_t30 = 1.0 if (p2_hp_t30 == 0.0 or p2_act.get("status") == "fnt" or p2_act_name in p2_fainted) else 0.0
+        feat[f"{PREFIX}p1_active_is_fnt"] = p1_fnt_t30
+        feat[f"{PREFIX}p2_active_is_fnt"] = p2_fnt_t30
+        feat[f"{PREFIX}diff_active_is_fnt"] = p2_fnt_t30 - p1_fnt_t30
+
+        p1_boosts = {} if p1_fnt_t30 else p1_act.get("boosts", {})
+        p2_boosts = {} if p2_fnt_t30 else p2_act.get("boosts", {})
 
         p1_tot_boosts = sum(p1_boosts.values()) if p1_boosts else 0
         p2_tot_boosts = sum(p2_boosts.values()) if p2_boosts else 0
@@ -116,15 +136,15 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
         feat[f"{PREFIX}p2_active_spe_boost"] = float(p2_boosts.get("spe", 0))
         feat[f"{PREFIX}diff_active_total_boosts"] = float(p1_tot_boosts - p2_tot_boosts)
 
-    # 6. Major Gen 2 Status conditions across seen Pokémon
-    p1_slp_frz = sum(1 for st in p1_last_status.values() if st in ("slp", "frz"))
-    p2_slp_frz = sum(1 for st in p2_last_status.values() if st in ("slp", "frz"))
+    # 6. Major Gen 2 Status conditions across ALIVE Pokémon only
+    p1_slp_frz = sum(1 for name, st in p1_last_status.items() if st in ("slp", "frz") and name not in p1_fainted)
+    p2_slp_frz = sum(1 for name, st in p2_last_status.items() if st in ("slp", "frz") and name not in p2_fainted)
     feat[f"{PREFIX}p1_slp_or_frz_count"] = float(p1_slp_frz)
     feat[f"{PREFIX}p2_slp_or_frz_count"] = float(p2_slp_frz)
     feat[f"{PREFIX}diff_slp_or_frz"] = float(p1_slp_frz - p2_slp_frz)
 
-    p1_major_st = sum(1 for st in p1_last_status.values() if st in ("slp", "frz", "par", "tox", "psn", "brn"))
-    p2_major_st = sum(1 for st in p2_last_status.values() if st in ("slp", "frz", "par", "tox", "psn", "brn"))
+    p1_major_st = sum(1 for name, st in p1_last_status.items() if st in ("slp", "frz", "par", "tox", "psn", "brn") and name not in p1_fainted)
+    p2_major_st = sum(1 for name, st in p2_last_status.items() if st in ("slp", "frz", "par", "tox", "psn", "brn") and name not in p2_fainted)
     feat[f"{PREFIX}p1_major_status_count"] = float(p1_major_st)
     feat[f"{PREFIX}p2_major_status_count"] = float(p2_major_st)
     feat[f"{PREFIX}diff_major_status"] = float(p1_major_st - p2_major_st)
