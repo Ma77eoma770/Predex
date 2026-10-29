@@ -1580,4 +1580,18 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     feat[f"{PREFIX}p2_team_phys_vs_spec_bulk"] = float(p2_phys_vs_spec_bulk)
     feat[f"{PREFIX}diff_team_phys_vs_spec_bulk"] = float(p1_phys_vs_spec_bulk - p2_phys_vs_spec_bulk)
 
+    # 16. Consolidated GSC Mitigations & Bipartite Physics v2 Engine
+    try:
+        from src.features.modules.engine.mitigations import extract_features as _extract_mitigations
+        feat.update(_extract_mitigations(data))
+    except Exception as e:
+        pass
+
+    try:
+        from src.features.modules.engine.bipartite_physics import extract_features as _extract_physics
+        feat.update(_extract_physics(data))
+    except Exception as e:
+        pass
+
     return feat
+

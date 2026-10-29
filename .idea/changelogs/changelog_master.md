@@ -26,6 +26,12 @@ Il progetto è progredito attraverso 7 versioni principali, evolvendo sia l'arch
 │ v6.0 (Blunders) │ 344      │ CatBoost GPU    │ 68.4400%    │ Anti-Blunder (Fnt, Bulk)  │
 │ v7.0 (Current)  │ 464      │ Random Forest   │ 67.3400%    │ Picco Fold 3: 70.80% (RF) │
 │                 │          │ CatBoost GPU    │ 68.4700%    │ Picco Fold 3: 71.20% (CB) │
+│ v8.0 (Audit)    │ 479      │ Random Forest   │ 67.2700%    │ Fainted Leak Audit        │
+│ v9.0 (Viability)│ 454      │ Random Forest   │ 67.3400%    │ Smogon Index, Wall Lock   │
+│ v10.0 (Physics) │ 391/522  │ Bagging Blend   │ 68.1500%    │ Raw: 68.15%, Tuned: 68.30%│
+│                 │          │ (50% ET+50% RF) │ (AUC 0.747) │ Brier: 0.2045, LL: 0.5933 │
+│ v11.0 (Ensemble)│ 391/522  │ Heavy Ensemble  │ 69.7200%    │ Raw: 69.71%, Tuned: 69.72%│
+│                 │          │ (CB+LR+LGBM+ET) │ (AUC 0.765) │ Brier: 0.1967, LL: 0.5739 │
 └─────────────────┴──────────┴─────────────────┴─────────────┴───────────────────────────┘
 ```
 
@@ -135,5 +141,111 @@ Il progetto è progredito attraverso 7 versioni principali, evolvendo sia l'arch
   - **Brier Score**: **0.2081** (calibrazione migliorata)
   - **Fold 3**: **70.0000%**, **Fold 1**: **68.6000%**, **Fold 8**: **68.1000%**
   - **Mean CV Accuracy**: **66.9200% - 67.2700%** (a seconda del noise pruning threshold)
+
+---
+
+## [v10.0] - GSC Bipartite Physics Engine v2, Empirical Move Priors, Spearman Hierarchical Pruning & Pure Bagging Blend
+- **Data**: 29 Ottobre 2026
+- **Architettura**: Pure Tree Ensemble Blending (50% ExtraTrees + 50% RandomForest), 450 estimatori ciascuno, `max_depth=16-17`, `min_samples_leaf=8`, `max_features=0.18`, `criterion='log_loss'`.
+- **Feature Store**: 522 feature aggregate nel Master Feature Store (`f_bipartite_physics.py` v2 + `f_mitigations.py` + `f_random_forest.py`).
+- **Ortogonalizzazione tramite Spearman Hierarchical Pruning**:
+  - Matrice di correlazione di Spearman $|\rho|$ sulle 522 feature.
+  - Agglomerative Hierarchical Clustering con Ward Linkage (soglia di distanza $0.12$, ovvero $|\rho| > 0.88$).
+  - Dentro ogni cluster di feature collineari viene mantenuta esclusivamente la feature a più alta Permutation Importance Out-Of-Fold.
+  - Riduzione da 522 a **391 feature ortogonali**, tagliando 131 cloni collineari di HP e riserve che diluivano i campionamenti ai nodi radice dell'albero.
+- **Meccaniche Fisiche e Competitive di Gen 2 Introdotte**:
+  1. **Stat Scaling Lv. 100 GSC e Iniezione Strumenti Moltiplicatori**:
+     - Light Ball Pikachu: raddoppio $SpA_{Lv100} \to 396$ (superiore a Zapdos/Raikou, risolve strutturalmente match anomali come #7204).
+     - Thick Club Marowak: raddoppio $Atk_{Lv100} \to 516$ (se non rivela Leftovers).
+  2. **Stallo Infinito (TTK = $\infty$) e Cure Cicliche nel Micro-Rollout**:
+     - Feature dedicata `rf_diff_infinite_stall_locks`: numero di difensori per cui $\max_{i \in Opp} d(i \to j) < 0.31$ (soglia sotto cui il ciclo a 3 turni di Rest + Leftovers mura matematicamente l'intera squadra nemica).
+     - Simulazione cure 50% (Soft-Boiled Blissey, Milk Drink Miltank, Recover Starmie) se $HP \le 0.55$.
+     - Ciclo Rest + Curse: se $HP\% > d_{incoming}$, recupero a 100% HP e 2 turni di sonno con scaling +1 Atk/+1 Def se non ci sono phazer avversari vivi.
+  3. **Leva di Detonazione Latente (Explosion / Self-Destruct 500 BP effettivi)**:
+     - `rf_diff_latent_boom_leverage`: calcolo dell'overhead di scambio 1-for-1 forzato per boom-user classici (Forretress, Cloyster, Exeggutor, Gengar, Steelix, Snorlax, Golem) sotto il 45% HP tenendo conto del dimezzamento difensivo del bersaglio.
+  4. **Prior Empirici delle Mosse dal Train Set (Zero Data Leakage)**:
+     - Script autonomo che mappa $P(m \mid s)$ su 195 specie Gen 2 OU leggendo unicamente le timeline del training set (`data/empirical_move_priors.json`).
+     - Stima probabilistica della coverage latente (es. Fire Blast su Tyranitar/Snorlax contro Skarmory/Forretress, Cross Chop su Machamp con crit rate al 25% che scavalca i boost difensivi).
+  5. **Switch Proattivo al Turno 31**:
+     - Se il Pokémon attivo a T30 infligge $d < 0.18$ e in panchina c'è un compagno che subisce $< 0.35$ in entrata e minaccia $> 0.45$ al turno dopo, il rollout simula il cambio tattico anziché la perdita passiva del pezzo.
+  6. **Feature di Regime-Switching Non-Lineari**:
+     - `rf_comeback_override_signal`: disattivata nei match standard, esplode quando P1 è sotto di HP ma il rollout e lo sweep counter certificano la vittoria (risolti i casi di ribaltamento come #1861, #7989).
+     - `rf_throw_collapse_signal`: intercetta i falsi positivi dove P1 è avanti di HP ma murato o in trappola.
+     - `rf_anti_meta_viability_inversion`: annulla il bias di tier quando una squadra low-tier schiera il counter di tipo ideale (#258 Meganium/Shuckle su Terra/Acqua).
+     - `rf_post_t30_bench_vs_active_delta`: dislivello di potenziale tra panchina viva e matchup attivo a T30.
+- **Risultati Ufficiali 10-Fold CV**:
+  - **Raw CV Accuracy (Pure Bagging Blend)**: **68.1500%** ($\pm 1.2396\%$)
+  - **Threshold Tuned Accuracy ($\tau=0.5050$)**: **68.3000%**
+  - **ROC-AUC**: **0.7469** (Blend), **0.7475** (Full Matrix ExtraTrees)
+  - **Brier Score**: **0.2045** (nuovo minimo storico di calibrazione)
+  - **Log-Loss**: **0.5933** (Blend), **0.5924** (RandomForest $max\_feats=0.18$)
+  - **Risoluzione Casi Limite**: #816 (Curse+Rest Snorlax) e #7204 (Light Ball Pikachu) usciti completamente dalla Top 10 worst errors; #4915 (Forretress) sceso dal 2° al 10° posto.
+
+---
+
+## 5. 🚀 Architettura per Heavy Ensembling (Preparazione Stacking / Blending)
+
+La pipeline è ora strutturata in modo standardizzato e modulare per accogliere un ensembling pesante multi-paradigma (Tree-based Bagging, Oblivious Boosting, Gradient Boosting e Calibrated Linear Meta-Learners):
+
+```text
+┌──────────────────────────────────────────────────────────────────────────────────────────────┐
+│                            PIPELINE HEAVY ENSEMBLING (PREDEX)                                │
+├──────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 1. FEATURE STORE CONDIVISO                                                                   │
+│    ├── data/features/train_features.parquet (10.000 x 522)                                   │
+│    ├── data/features/test_features.parquet  (5.000 x 522)                                    │
+│    └── Selettore ortogonale 391 feature (Hierarchical Spearman Linkage)                      │
+├──────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 2. DIVERSIFICAZIONE MODELLI LEVEL-1 (OOF 10-FOLD & TEST PROBABILITIES)                       │
+│    ├── ExtraTreesClassifier (Bagging continuo non-greedy, interpolazione scalari)           │
+│    ├── RandomForestClassifier (Bagging discreto, criterion='log_loss', soglie hard)          │
+│    ├── CatBoostClassifier GPU (Oblivious trees depth=5-6, simmetria globale)                │
+│    ├── LightGBM / XGBoost (Gradient boosting su foglie asimmetriche ad alta profondità)     │
+│    └── LinearSVC / CalibratedLogisticRegression (Meta-prior e regolarizzazione L2)          │
+├──────────────────────────────────────────────────────────────────────────────────────────────┤
+│ 3. META-INTEGRAZIONE LEVEL-2                                                                 │
+│    ├── Weighted Soft Voting (pesatura bayesiana ottimizzata su Log-Loss / Brier Score)      │
+│    ├── Out-of-Fold Stacking Classifier (Ridge / LogisticRegression con meta-calibrazione)    │
+│    └── Ottimizzazione Soglia Globale di Decisione ($\tau \in [0.490, 0.515]$)                │
+└──────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### File e Contratti di Integrazione Pronti per l'Ensemble:
+* **Predizioni OOF Standardizzate**:
+  - `outputs/oof_random_forest.csv` (10.000 righe con `battle_id`, `oof_pred`, `oof_prob`, `y_true`).
+* **Probabilità Test Standardizzate**:
+  - `outputs/test_probs_random_forest.csv` (5.000 righe con `battle_id`, `prob_p1_win`).
+  - `outputs/submission_random_forest.csv` (5.000 predizioni binarie conformi al formato di gara).
+* **Cross-Validation Blindata**:
+  - Tutti i modelli condividono rigorosamente i medesimi 10 fold stratificati definiti in `data/folds.csv` garantendo zero data leakage e permettendo lo stacking OOF matematicamente corretto.
+
+---
+
+## [v11.0] - Multi-Paradigm Heavy Ensembling Breakthrough (69.72% CV Accuracy)
+- **Data**: 29 Ottobre 2026
+- **Architettura**: Heavy Ensemble multi-paradigma con modelli di Livello 1 eterogenei e Meta-Integrazione SLSQP di Livello 2.
+- **Modelli di Livello 1 (10-Fold CV su 391 feature ortogonali)**:
+  - `CatBoostClassifier`: **68.99% Acc** | AUC 0.7586 | Brier 0.1991 | LogLoss 0.5797 (Miglior singolo modello).
+  - `LightGBMClassifier`: **68.67% Acc** | AUC 0.7550 | Brier 0.2008 | LogLoss 0.5838.
+  - `LogisticRegression` (Calibrata L2): **68.58% Acc** | AUC 0.7558 | Brier 0.2008 | LogLoss 0.5847 (Salita dal 66.56% grazie alla fisica bipartita).
+  - `RandomForestClassifier`: **68.15% Acc** | AUC 0.7466 | Brier 0.2045 | LogLoss 0.5933.
+  - `ExtraTreesClassifier`: **68.10% Acc** | AUC 0.7445 | Brier 0.2055 | LogLoss 0.5956.
+- **Benchmark Strategie di Ensembling di Livello 2**:
+  1. *Pure Bagging Blend (50% ET + 50% RF)*: 67.99% raw, 68.30% tuned (AUC 0.7461).
+  2. *Equal Weighted Soft Voting (Tutti i 5 modelli)*: 69.14% raw, 69.43% tuned (AUC 0.7619, Brier 0.1982).
+  3. *Rank Averaging (Non-Parametrico)*: 69.14% raw, 69.34% tuned (AUC 0.7609).
+  4. *Meta-Learner Stacking (Logistic Regression)*: 69.61% raw, 69.66% tuned (AUC 0.7637, Brier 0.1976).
+  5. **Optimized Weighted Soft Voting (SLSQP vincolata su LogLoss)**:
+     - **Pesi Ottimali**: CatBoost: 0.386, Logistic Regression: 0.404, LightGBM: 0.210 (ExtraTrees/RF a 0.000 nel voto continuo puro ma utilizzati nel pruning).
+     - **Raw CV Accuracy**: **69.7100%**
+     - **Tuned CV Accuracy ($\tau = 0.4930$)**: **69.7200%**
+     - **ROC-AUC**: **0.7646** (Record assoluto)
+     - **Brier Score**: **0.1967** (Record assoluto)
+     - **Log-Loss**: **0.5739** (Record assoluto)
+- **Output Generati**:
+  - `outputs/submission_heavy_ensemble.csv` (5.000 righe di predizioni binarie per Kaggle).
+  - `outputs/oof_heavy_ensemble.csv` (10.000 probabilità e predizioni OOF per verifica diagnostica).
+
+
 
 

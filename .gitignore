@@ -24,3 +24,4 @@ raw_data/*
 data/features/*
 !data/features/.gitkeep
 *.parquet
+catboost_info/
