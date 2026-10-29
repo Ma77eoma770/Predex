@@ -20,7 +20,6 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     for s in p1_stats:
         vals = [p.get(s, 0) for p in p1_team]
         feat[f"{PREFIX}p1_team_sum_{s}"] = float(np.sum(vals))
-        feat[f"{PREFIX}p1_team_mean_{s}"] = float(np.mean(vals)) if vals else 0.0
 
     # 2. Feature statiche: Lead Player 2
     p2_lead = data.get("p2_lead_details", {})
@@ -73,7 +72,7 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     # 4. Differenze esplicite P1 - P2
     feat[f"{PREFIX}diff_active_hp"] = p1_last_hp - p2_last_hp
     feat[f"{PREFIX}diff_ko"] = float(p1_ko_count - p2_ko_count)
-    feat[f"{PREFIX}diff_hp_stat"] = feat[f"{PREFIX}p1_team_mean_base_hp"] - feat[f"{PREFIX}p2_lead_base_hp"]
-    feat[f"{PREFIX}diff_spe_stat"] = feat[f"{PREFIX}p1_team_mean_base_spe"] - feat[f"{PREFIX}p2_lead_base_spe"]
+    feat[f"{PREFIX}diff_hp_stat"] = (feat[f"{PREFIX}p1_team_sum_base_hp"] / 6.0) - feat[f"{PREFIX}p2_lead_base_hp"]
+    feat[f"{PREFIX}diff_spe_stat"] = (feat[f"{PREFIX}p1_team_sum_base_spe"] / 6.0) - feat[f"{PREFIX}p2_lead_base_spe"]
 
     return feat

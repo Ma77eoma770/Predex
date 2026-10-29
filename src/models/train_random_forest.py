@@ -64,11 +64,11 @@ def get_rf_classifier(
 def run_training(
     n_estimators: int = 500,
     criterion: str = "log_loss",
-    max_depth: int = 12,
+    max_depth: int = 17,
     min_samples_split: int = 10,
     min_samples_leaf: int = 6,
-    max_features: Union[str, float] = "sqrt",
-    top_k_features: Optional[int] = 300,
+    max_features: Union[str, float] = 0.2,
+    top_k_features: Optional[int] = None,
     force_recompute_features: bool = False,
 ):
     print("=" * 70)
@@ -241,11 +241,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Predex - Random Forest Trainer")
     parser.add_argument("--n-estimators", type=int, default=500, help="Number of trees (default: 500)")
     parser.add_argument("--criterion", type=str, default="log_loss", choices=["gini", "entropy", "log_loss"], help="Split criterion (default: log_loss)")
-    parser.add_argument("--max-depth", type=int, default=12, help="Maximum tree depth (default: 12)")
+    parser.add_argument("--max-depth", type=int, default=17, help="Maximum tree depth (default: 17)")
     parser.add_argument("--min-samples-split", type=int, default=10, help="Min samples to split internal node (default: 10)")
     parser.add_argument("--min-samples-leaf", type=int, default=6, help="Min samples at leaf node (default: 6)")
-    parser.add_argument("--max-features", type=str, default="sqrt", help="Max features fraction or mode (default: sqrt)")
-    parser.add_argument("--top-k", type=int, default=300, help="Number of top features to keep after noise pruning (0 to disable, default: 300)")
+    parser.add_argument("--max-features", type=str, default="0.2", help="Max features fraction or mode (default: 0.2)")
+    parser.add_argument("--top-k", type=int, default=0, help="Number of top features to keep after noise pruning (0 to disable, default: 0)")
     parser.add_argument("--force-features", action="store_true", help="Force rebuild of master feature parquet")
     args = parser.parse_args()
 
