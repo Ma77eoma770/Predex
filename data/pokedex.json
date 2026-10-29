@@ -1,0 +1,3000 @@
+{
+  "tyranitar": {
+    "types": [
+      "dark",
+      "rock"
+    ],
+    "base_hp": 100.0,
+    "base_atk": 134.0,
+    "base_def": 110.0,
+    "base_spa": 95.0,
+    "base_spd": 100.0,
+    "base_spe": 61.0
+  },
+  "typhlosion": {
+    "types": [
+      "fire",
+      "notype"
+    ],
+    "base_hp": 78.0,
+    "base_atk": 84.0,
+    "base_def": 78.0,
+    "base_spa": 109.0,
+    "base_spd": 85.0,
+    "base_spe": 100.0
+  },
+  "golem": {
+    "types": [
+      "ground",
+      "rock"
+    ],
+    "base_hp": 80.0,
+    "base_atk": 110.0,
+    "base_def": 130.0,
+    "base_spa": 55.0,
+    "base_spd": 65.0,
+    "base_spe": 45.0
+  },
+  "umbreon": {
+    "types": [
+      "dark",
+      "notype"
+    ],
+    "base_hp": 95.0,
+    "base_atk": 65.0,
+    "base_def": 110.0,
+    "base_spa": 60.0,
+    "base_spd": 130.0,
+    "base_spe": 65.0
+  },
+  "alakazam": {
+    "types": [
+      "notype",
+      "psychic"
+    ],
+    "base_hp": 55.0,
+    "base_atk": 50.0,
+    "base_def": 45.0,
+    "base_spa": 135.0,
+    "base_spd": 85.0,
+    "base_spe": 120.0
+  },
+  "raikou": {
+    "types": [
+      "electric",
+      "notype"
+    ],
+    "base_hp": 90.0,
+    "base_atk": 85.0,
+    "base_def": 75.0,
+    "base_spa": 115.0,
+    "base_spd": 100.0,
+    "base_spe": 115.0
+  },
+  "forretress": {
+    "types": [
+      "bug",
+      "steel"
+    ],
+    "base_hp": 75.0,
+    "base_atk": 90.0,
+    "base_def": 140.0,
+    "base_spa": 60.0,
+    "base_spd": 60.0,
+    "base_spe": 40.0
+  },
+  "skarmory": {
+    "types": [
+      "flying",
+      "steel"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 80.0,
+    "base_def": 140.0,
+    "base_spa": 40.0,
+    "base_spd": 70.0,
+    "base_spe": 70.0
+  },
+  "misdreavus": {
+    "types": [
+      "ghost",
+      "notype"
+    ],
+    "base_hp": 60.0,
+    "base_atk": 60.0,
+    "base_def": 60.0,
+    "base_spa": 85.0,
+    "base_spd": 85.0,
+    "base_spe": 85.0
+  },
+  "snorlax": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 160.0,
+    "base_atk": 110.0,
+    "base_def": 65.0,
+    "base_spa": 65.0,
+    "base_spd": 110.0,
+    "base_spe": 30.0
+  },
+  "suicune": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 100.0,
+    "base_atk": 75.0,
+    "base_def": 115.0,
+    "base_spa": 90.0,
+    "base_spd": 115.0,
+    "base_spe": 85.0
+  },
+  "heracross": {
+    "types": [
+      "bug",
+      "fighting"
+    ],
+    "base_hp": 80.0,
+    "base_atk": 125.0,
+    "base_def": 75.0,
+    "base_spa": 40.0,
+    "base_spd": 95.0,
+    "base_spe": 85.0
+  },
+  "cloyster": {
+    "types": [
+      "ice",
+      "water"
+    ],
+    "base_hp": 50.0,
+    "base_atk": 95.0,
+    "base_def": 180.0,
+    "base_spa": 85.0,
+    "base_spd": 45.0,
+    "base_spe": 70.0
+  },
+  "machamp": {
+    "types": [
+      "fighting",
+      "notype"
+    ],
+    "base_hp": 90.0,
+    "base_atk": 130.0,
+    "base_def": 80.0,
+    "base_spa": 65.0,
+    "base_spd": 85.0,
+    "base_spe": 55.0
+  },
+  "exeggutor": {
+    "types": [
+      "grass",
+      "psychic"
+    ],
+    "base_hp": 95.0,
+    "base_atk": 95.0,
+    "base_def": 85.0,
+    "base_spa": 125.0,
+    "base_spd": 65.0,
+    "base_spe": 55.0
+  },
+  "zapdos": {
+    "types": [
+      "electric",
+      "flying"
+    ],
+    "base_hp": 90.0,
+    "base_atk": 90.0,
+    "base_def": 85.0,
+    "base_spa": 125.0,
+    "base_spd": 90.0,
+    "base_spe": 100.0
+  },
+  "blissey": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 255.0,
+    "base_atk": 10.0,
+    "base_def": 10.0,
+    "base_spa": 75.0,
+    "base_spd": 135.0,
+    "base_spe": 55.0
+  },
+  "nidoking": {
+    "types": [
+      "ground",
+      "poison"
+    ],
+    "base_hp": 81.0,
+    "base_atk": 92.0,
+    "base_def": 77.0,
+    "base_spa": 85.0,
+    "base_spd": 75.0,
+    "base_spe": 85.0
+  },
+  "steelix": {
+    "types": [
+      "ground",
+      "steel"
+    ],
+    "base_hp": 75.0,
+    "base_atk": 85.0,
+    "base_def": 200.0,
+    "base_spa": 55.0,
+    "base_spd": 65.0,
+    "base_spe": 30.0
+  },
+  "vaporeon": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 130.0,
+    "base_atk": 65.0,
+    "base_def": 60.0,
+    "base_spa": 110.0,
+    "base_spd": 95.0,
+    "base_spe": 65.0
+  },
+  "jynx": {
+    "types": [
+      "ice",
+      "psychic"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 50.0,
+    "base_def": 35.0,
+    "base_spa": 115.0,
+    "base_spd": 95.0,
+    "base_spe": 95.0
+  },
+  "rhydon": {
+    "types": [
+      "ground",
+      "rock"
+    ],
+    "base_hp": 105.0,
+    "base_atk": 130.0,
+    "base_def": 120.0,
+    "base_spa": 45.0,
+    "base_spd": 45.0,
+    "base_spe": 40.0
+  },
+  "kingdra": {
+    "types": [
+      "dragon",
+      "water"
+    ],
+    "base_hp": 75.0,
+    "base_atk": 95.0,
+    "base_def": 95.0,
+    "base_spa": 95.0,
+    "base_spd": 95.0,
+    "base_spe": 85.0
+  },
+  "scizor": {
+    "types": [
+      "bug",
+      "steel"
+    ],
+    "base_hp": 70.0,
+    "base_atk": 130.0,
+    "base_def": 100.0,
+    "base_spa": 55.0,
+    "base_spd": 80.0,
+    "base_spe": 65.0
+  },
+  "houndoom": {
+    "types": [
+      "dark",
+      "fire"
+    ],
+    "base_hp": 75.0,
+    "base_atk": 90.0,
+    "base_def": 50.0,
+    "base_spa": 110.0,
+    "base_spd": 80.0,
+    "base_spe": 95.0
+  },
+  "gengar": {
+    "types": [
+      "ghost",
+      "poison"
+    ],
+    "base_hp": 60.0,
+    "base_atk": 65.0,
+    "base_def": 60.0,
+    "base_spa": 130.0,
+    "base_spd": 75.0,
+    "base_spe": 110.0
+  },
+  "jumpluff": {
+    "types": [
+      "flying",
+      "grass"
+    ],
+    "base_hp": 75.0,
+    "base_atk": 55.0,
+    "base_def": 70.0,
+    "base_spa": 55.0,
+    "base_spd": 85.0,
+    "base_spe": 110.0
+  },
+  "smeargle": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 55.0,
+    "base_atk": 20.0,
+    "base_def": 35.0,
+    "base_spa": 20.0,
+    "base_spd": 45.0,
+    "base_spe": 75.0
+  },
+  "poliwrath": {
+    "types": [
+      "fighting",
+      "water"
+    ],
+    "base_hp": 90.0,
+    "base_atk": 85.0,
+    "base_def": 95.0,
+    "base_spa": 70.0,
+    "base_spd": 90.0,
+    "base_spe": 70.0
+  },
+  "piloswine": {
+    "types": [
+      "ground",
+      "ice"
+    ],
+    "base_hp": 100.0,
+    "base_atk": 100.0,
+    "base_def": 80.0,
+    "base_spa": 60.0,
+    "base_spd": 60.0,
+    "base_spe": 50.0
+  },
+  "aerodactyl": {
+    "types": [
+      "flying",
+      "rock"
+    ],
+    "base_hp": 80.0,
+    "base_atk": 105.0,
+    "base_def": 65.0,
+    "base_spa": 60.0,
+    "base_spd": 75.0,
+    "base_spe": 130.0
+  },
+  "starmie": {
+    "types": [
+      "psychic",
+      "water"
+    ],
+    "base_hp": 60.0,
+    "base_atk": 75.0,
+    "base_def": 85.0,
+    "base_spa": 100.0,
+    "base_spd": 85.0,
+    "base_spe": 115.0
+  },
+  "marowak": {
+    "types": [
+      "ground",
+      "notype"
+    ],
+    "base_hp": 60.0,
+    "base_atk": 80.0,
+    "base_def": 110.0,
+    "base_spa": 50.0,
+    "base_spd": 80.0,
+    "base_spe": 45.0
+  },
+  "dragonite": {
+    "types": [
+      "dragon",
+      "flying"
+    ],
+    "base_hp": 91.0,
+    "base_atk": 134.0,
+    "base_def": 95.0,
+    "base_spa": 100.0,
+    "base_spd": 100.0,
+    "base_spe": 80.0
+  },
+  "miltank": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 95.0,
+    "base_atk": 80.0,
+    "base_def": 105.0,
+    "base_spa": 40.0,
+    "base_spd": 70.0,
+    "base_spe": 100.0
+  },
+  "fearow": {
+    "types": [
+      "flying",
+      "normal"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 90.0,
+    "base_def": 65.0,
+    "base_spa": 61.0,
+    "base_spd": 61.0,
+    "base_spe": 100.0
+  },
+  "graveler": {
+    "types": [
+      "ground",
+      "rock"
+    ],
+    "base_hp": 55.0,
+    "base_atk": 95.0,
+    "base_def": 115.0,
+    "base_spa": 45.0,
+    "base_spd": 45.0,
+    "base_spe": 35.0
+  },
+  "hitmonchan": {
+    "types": [
+      "fighting",
+      "notype"
+    ],
+    "base_hp": 50.0,
+    "base_atk": 105.0,
+    "base_def": 79.0,
+    "base_spa": 35.0,
+    "base_spd": 110.0,
+    "base_spe": 76.0
+  },
+  "mrmime": {
+    "types": [
+      "notype",
+      "psychic"
+    ],
+    "base_hp": 40.0,
+    "base_atk": 45.0,
+    "base_def": 65.0,
+    "base_spa": 100.0,
+    "base_spd": 120.0,
+    "base_spe": 90.0
+  },
+  "pikachu": {
+    "types": [
+      "electric",
+      "notype"
+    ],
+    "base_hp": 35.0,
+    "base_atk": 55.0,
+    "base_def": 30.0,
+    "base_spa": 50.0,
+    "base_spd": 40.0,
+    "base_spe": 90.0
+  },
+  "rapidash": {
+    "types": [
+      "fire",
+      "notype"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 100.0,
+    "base_def": 70.0,
+    "base_spa": 80.0,
+    "base_spd": 80.0,
+    "base_spe": 105.0
+  },
+  "clefable": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 95.0,
+    "base_atk": 70.0,
+    "base_def": 73.0,
+    "base_spa": 85.0,
+    "base_spd": 90.0,
+    "base_spe": 60.0
+  },
+  "porygon2": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 85.0,
+    "base_atk": 80.0,
+    "base_def": 90.0,
+    "base_spa": 105.0,
+    "base_spd": 95.0,
+    "base_spe": 60.0
+  },
+  "tauros": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 75.0,
+    "base_atk": 100.0,
+    "base_def": 95.0,
+    "base_spa": 40.0,
+    "base_spd": 70.0,
+    "base_spe": 110.0
+  },
+  "entei": {
+    "types": [
+      "fire",
+      "notype"
+    ],
+    "base_hp": 115.0,
+    "base_atk": 115.0,
+    "base_def": 85.0,
+    "base_spa": 90.0,
+    "base_spd": 75.0,
+    "base_spe": 100.0
+  },
+  "magneton": {
+    "types": [
+      "electric",
+      "steel"
+    ],
+    "base_hp": 50.0,
+    "base_atk": 60.0,
+    "base_def": 95.0,
+    "base_spa": 120.0,
+    "base_spd": 70.0,
+    "base_spe": 70.0
+  },
+  "electrode": {
+    "types": [
+      "electric",
+      "notype"
+    ],
+    "base_hp": 60.0,
+    "base_atk": 50.0,
+    "base_def": 70.0,
+    "base_spa": 80.0,
+    "base_spd": 80.0,
+    "base_spe": 140.0
+  },
+  "ampharos": {
+    "types": [
+      "electric",
+      "notype"
+    ],
+    "base_hp": 90.0,
+    "base_atk": 75.0,
+    "base_def": 75.0,
+    "base_spa": 115.0,
+    "base_spd": 90.0,
+    "base_spe": 55.0
+  },
+  "pidgeot": {
+    "types": [
+      "flying",
+      "normal"
+    ],
+    "base_hp": 83.0,
+    "base_atk": 80.0,
+    "base_def": 75.0,
+    "base_spa": 70.0,
+    "base_spd": 70.0,
+    "base_spe": 91.0
+  },
+  "pinsir": {
+    "types": [
+      "bug",
+      "notype"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 125.0,
+    "base_def": 100.0,
+    "base_spa": 55.0,
+    "base_spd": 70.0,
+    "base_spe": 85.0
+  },
+  "quagsire": {
+    "types": [
+      "ground",
+      "water"
+    ],
+    "base_hp": 95.0,
+    "base_atk": 85.0,
+    "base_def": 85.0,
+    "base_spa": 65.0,
+    "base_spd": 65.0,
+    "base_spe": 35.0
+  },
+  "slowbro": {
+    "types": [
+      "psychic",
+      "water"
+    ],
+    "base_hp": 95.0,
+    "base_atk": 75.0,
+    "base_def": 110.0,
+    "base_spa": 100.0,
+    "base_spd": 80.0,
+    "base_spe": 30.0
+  },
+  "jolteon": {
+    "types": [
+      "electric",
+      "notype"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 65.0,
+    "base_def": 60.0,
+    "base_spa": 110.0,
+    "base_spd": 95.0,
+    "base_spe": 130.0
+  },
+  "feraligatr": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 85.0,
+    "base_atk": 105.0,
+    "base_def": 100.0,
+    "base_spa": 79.0,
+    "base_spd": 83.0,
+    "base_spe": 78.0
+  },
+  "stantler": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 73.0,
+    "base_atk": 95.0,
+    "base_def": 62.0,
+    "base_spa": 85.0,
+    "base_spd": 65.0,
+    "base_spe": 85.0
+  },
+  "venomoth": {
+    "types": [
+      "bug",
+      "poison"
+    ],
+    "base_hp": 70.0,
+    "base_atk": 65.0,
+    "base_def": 60.0,
+    "base_spa": 90.0,
+    "base_spd": 75.0,
+    "base_spe": 90.0
+  },
+  "machoke": {
+    "types": [
+      "fighting",
+      "notype"
+    ],
+    "base_hp": 80.0,
+    "base_atk": 100.0,
+    "base_def": 70.0,
+    "base_spa": 50.0,
+    "base_spd": 60.0,
+    "base_spe": 45.0
+  },
+  "poliwhirl": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 65.0,
+    "base_def": 65.0,
+    "base_spa": 50.0,
+    "base_spd": 50.0,
+    "base_spe": 90.0
+  },
+  "qwilfish": {
+    "types": [
+      "poison",
+      "water"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 95.0,
+    "base_def": 75.0,
+    "base_spa": 55.0,
+    "base_spd": 55.0,
+    "base_spe": 85.0
+  },
+  "moltres": {
+    "types": [
+      "fire",
+      "flying"
+    ],
+    "base_hp": 90.0,
+    "base_atk": 100.0,
+    "base_def": 90.0,
+    "base_spa": 125.0,
+    "base_spd": 85.0,
+    "base_spe": 90.0
+  },
+  "tentacruel": {
+    "types": [
+      "poison",
+      "water"
+    ],
+    "base_hp": 80.0,
+    "base_atk": 70.0,
+    "base_def": 65.0,
+    "base_spa": 80.0,
+    "base_spd": 120.0,
+    "base_spe": 100.0
+  },
+  "venusaur": {
+    "types": [
+      "grass",
+      "poison"
+    ],
+    "base_hp": 80.0,
+    "base_atk": 82.0,
+    "base_def": 83.0,
+    "base_spa": 100.0,
+    "base_spd": 100.0,
+    "base_spe": 80.0
+  },
+  "murkrow": {
+    "types": [
+      "dark",
+      "flying"
+    ],
+    "base_hp": 60.0,
+    "base_atk": 85.0,
+    "base_def": 42.0,
+    "base_spa": 85.0,
+    "base_spd": 42.0,
+    "base_spe": 91.0
+  },
+  "hitmontop": {
+    "types": [
+      "fighting",
+      "notype"
+    ],
+    "base_hp": 50.0,
+    "base_atk": 95.0,
+    "base_def": 95.0,
+    "base_spa": 35.0,
+    "base_spd": 110.0,
+    "base_spe": 70.0
+  },
+  "dugtrio": {
+    "types": [
+      "ground",
+      "notype"
+    ],
+    "base_hp": 35.0,
+    "base_atk": 80.0,
+    "base_def": 50.0,
+    "base_spa": 50.0,
+    "base_spd": 70.0,
+    "base_spe": 120.0
+  },
+  "muk": {
+    "types": [
+      "notype",
+      "poison"
+    ],
+    "base_hp": 105.0,
+    "base_atk": 105.0,
+    "base_def": 75.0,
+    "base_spa": 65.0,
+    "base_spd": 100.0,
+    "base_spe": 50.0
+  },
+  "scyther": {
+    "types": [
+      "bug",
+      "flying"
+    ],
+    "base_hp": 70.0,
+    "base_atk": 110.0,
+    "base_def": 80.0,
+    "base_spa": 55.0,
+    "base_spd": 80.0,
+    "base_spe": 105.0
+  },
+  "weezing": {
+    "types": [
+      "notype",
+      "poison"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 90.0,
+    "base_def": 120.0,
+    "base_spa": 85.0,
+    "base_spd": 70.0,
+    "base_spe": 60.0
+  },
+  "crobat": {
+    "types": [
+      "flying",
+      "poison"
+    ],
+    "base_hp": 85.0,
+    "base_atk": 90.0,
+    "base_def": 80.0,
+    "base_spa": 70.0,
+    "base_spd": 80.0,
+    "base_spe": 130.0
+  },
+  "articuno": {
+    "types": [
+      "flying",
+      "ice"
+    ],
+    "base_hp": 90.0,
+    "base_atk": 85.0,
+    "base_def": 100.0,
+    "base_spa": 95.0,
+    "base_spd": 125.0,
+    "base_spe": 85.0
+  },
+  "meganium": {
+    "types": [
+      "grass",
+      "notype"
+    ],
+    "base_hp": 80.0,
+    "base_atk": 82.0,
+    "base_def": 100.0,
+    "base_spa": 83.0,
+    "base_spd": 100.0,
+    "base_spe": 80.0
+  },
+  "charizard": {
+    "types": [
+      "fire",
+      "flying"
+    ],
+    "base_hp": 78.0,
+    "base_atk": 84.0,
+    "base_def": 78.0,
+    "base_spa": 109.0,
+    "base_spd": 85.0,
+    "base_spe": 100.0
+  },
+  "dodrio": {
+    "types": [
+      "flying",
+      "normal"
+    ],
+    "base_hp": 60.0,
+    "base_atk": 110.0,
+    "base_def": 70.0,
+    "base_spa": 60.0,
+    "base_spd": 60.0,
+    "base_spe": 100.0
+  },
+  "primeape": {
+    "types": [
+      "fighting",
+      "notype"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 105.0,
+    "base_def": 60.0,
+    "base_spa": 60.0,
+    "base_spd": 70.0,
+    "base_spe": 95.0
+  },
+  "lanturn": {
+    "types": [
+      "electric",
+      "water"
+    ],
+    "base_hp": 125.0,
+    "base_atk": 58.0,
+    "base_def": 58.0,
+    "base_spa": 76.0,
+    "base_spd": 76.0,
+    "base_spe": 67.0
+  },
+  "girafarig": {
+    "types": [
+      "normal",
+      "psychic"
+    ],
+    "base_hp": 70.0,
+    "base_atk": 80.0,
+    "base_def": 65.0,
+    "base_spa": 90.0,
+    "base_spd": 65.0,
+    "base_spe": 85.0
+  },
+  "nidoqueen": {
+    "types": [
+      "ground",
+      "poison"
+    ],
+    "base_hp": 90.0,
+    "base_atk": 82.0,
+    "base_def": 87.0,
+    "base_spa": 75.0,
+    "base_spd": 85.0,
+    "base_spe": 76.0
+  },
+  "gyarados": {
+    "types": [
+      "flying",
+      "water"
+    ],
+    "base_hp": 95.0,
+    "base_atk": 125.0,
+    "base_def": 79.0,
+    "base_spa": 60.0,
+    "base_spd": 100.0,
+    "base_spe": 81.0
+  },
+  "chansey": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 250.0,
+    "base_atk": 5.0,
+    "base_def": 5.0,
+    "base_spa": 35.0,
+    "base_spd": 105.0,
+    "base_spe": 50.0
+  },
+  "electabuzz": {
+    "types": [
+      "electric",
+      "notype"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 83.0,
+    "base_def": 57.0,
+    "base_spa": 95.0,
+    "base_spd": 85.0,
+    "base_spe": 105.0
+  },
+  "victreebel": {
+    "types": [
+      "grass",
+      "poison"
+    ],
+    "base_hp": 80.0,
+    "base_atk": 105.0,
+    "base_def": 65.0,
+    "base_spa": 100.0,
+    "base_spd": 60.0,
+    "base_spe": 70.0
+  },
+  "flareon": {
+    "types": [
+      "fire",
+      "notype"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 130.0,
+    "base_def": 60.0,
+    "base_spa": 95.0,
+    "base_spd": 110.0,
+    "base_spe": 65.0
+  },
+  "quilava": {
+    "types": [
+      "fire",
+      "notype"
+    ],
+    "base_hp": 58.0,
+    "base_atk": 64.0,
+    "base_def": 58.0,
+    "base_spa": 80.0,
+    "base_spd": 65.0,
+    "base_spe": 80.0
+  },
+  "hypno": {
+    "types": [
+      "notype",
+      "psychic"
+    ],
+    "base_hp": 85.0,
+    "base_atk": 73.0,
+    "base_def": 70.0,
+    "base_spa": 73.0,
+    "base_spd": 115.0,
+    "base_spe": 67.0
+  },
+  "exeggcute": {
+    "types": [
+      "grass",
+      "psychic"
+    ],
+    "base_hp": 60.0,
+    "base_atk": 40.0,
+    "base_def": 80.0,
+    "base_spa": 60.0,
+    "base_spd": 45.0,
+    "base_spe": 40.0
+  },
+  "pidgeotto": {
+    "types": [
+      "flying",
+      "normal"
+    ],
+    "base_hp": 63.0,
+    "base_atk": 60.0,
+    "base_def": 55.0,
+    "base_spa": 50.0,
+    "base_spd": 50.0,
+    "base_spe": 71.0
+  },
+  "blastoise": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 79.0,
+    "base_atk": 83.0,
+    "base_def": 100.0,
+    "base_spa": 85.0,
+    "base_spd": 105.0,
+    "base_spe": 78.0
+  },
+  "espeon": {
+    "types": [
+      "notype",
+      "psychic"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 65.0,
+    "base_def": 60.0,
+    "base_spa": 130.0,
+    "base_spd": 95.0,
+    "base_spe": 110.0
+  },
+  "staryu": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 30.0,
+    "base_atk": 45.0,
+    "base_def": 55.0,
+    "base_spa": 70.0,
+    "base_spd": 55.0,
+    "base_spe": 85.0
+  },
+  "magnemite": {
+    "types": [
+      "electric",
+      "steel"
+    ],
+    "base_hp": 25.0,
+    "base_atk": 35.0,
+    "base_def": 70.0,
+    "base_spa": 95.0,
+    "base_spd": 55.0,
+    "base_spe": 45.0
+  },
+  "vulpix": {
+    "types": [
+      "fire",
+      "notype"
+    ],
+    "base_hp": 38.0,
+    "base_atk": 41.0,
+    "base_def": 40.0,
+    "base_spa": 50.0,
+    "base_spd": 65.0,
+    "base_spe": 65.0
+  },
+  "gastly": {
+    "types": [
+      "ghost",
+      "poison"
+    ],
+    "base_hp": 30.0,
+    "base_atk": 35.0,
+    "base_def": 30.0,
+    "base_spa": 100.0,
+    "base_spd": 35.0,
+    "base_spe": 80.0
+  },
+  "mankey": {
+    "types": [
+      "fighting",
+      "notype"
+    ],
+    "base_hp": 40.0,
+    "base_atk": 80.0,
+    "base_def": 35.0,
+    "base_spa": 35.0,
+    "base_spd": 45.0,
+    "base_spe": 70.0
+  },
+  "rattata": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 30.0,
+    "base_atk": 56.0,
+    "base_def": 35.0,
+    "base_spa": 25.0,
+    "base_spd": 35.0,
+    "base_spe": 72.0
+  },
+  "sandslash": {
+    "types": [
+      "ground",
+      "notype"
+    ],
+    "base_hp": 75.0,
+    "base_atk": 100.0,
+    "base_def": 110.0,
+    "base_spa": 45.0,
+    "base_spd": 55.0,
+    "base_spe": 65.0
+  },
+  "kangaskhan": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 105.0,
+    "base_atk": 95.0,
+    "base_def": 80.0,
+    "base_spa": 40.0,
+    "base_spd": 80.0,
+    "base_spe": 90.0
+  },
+  "aipom": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 55.0,
+    "base_atk": 70.0,
+    "base_def": 55.0,
+    "base_spa": 40.0,
+    "base_spd": 55.0,
+    "base_spe": 85.0
+  },
+  "granbull": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 90.0,
+    "base_atk": 120.0,
+    "base_def": 75.0,
+    "base_spa": 60.0,
+    "base_spd": 60.0,
+    "base_spe": 45.0
+  },
+  "kadabra": {
+    "types": [
+      "notype",
+      "psychic"
+    ],
+    "base_hp": 40.0,
+    "base_atk": 35.0,
+    "base_def": 30.0,
+    "base_spa": 120.0,
+    "base_spd": 70.0,
+    "base_spe": 105.0
+  },
+  "haunter": {
+    "types": [
+      "ghost",
+      "poison"
+    ],
+    "base_hp": 45.0,
+    "base_atk": 50.0,
+    "base_def": 45.0,
+    "base_spa": 115.0,
+    "base_spd": 55.0,
+    "base_spe": 95.0
+  },
+  "wartortle": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 59.0,
+    "base_atk": 63.0,
+    "base_def": 80.0,
+    "base_spa": 65.0,
+    "base_spd": 80.0,
+    "base_spe": 58.0
+  },
+  "ivysaur": {
+    "types": [
+      "grass",
+      "poison"
+    ],
+    "base_hp": 60.0,
+    "base_atk": 62.0,
+    "base_def": 63.0,
+    "base_spa": 80.0,
+    "base_spd": 80.0,
+    "base_spe": 60.0
+  },
+  "donphan": {
+    "types": [
+      "ground",
+      "notype"
+    ],
+    "base_hp": 90.0,
+    "base_atk": 120.0,
+    "base_def": 120.0,
+    "base_spa": 60.0,
+    "base_spd": 60.0,
+    "base_spe": 50.0
+  },
+  "ariados": {
+    "types": [
+      "bug",
+      "poison"
+    ],
+    "base_hp": 70.0,
+    "base_atk": 90.0,
+    "base_def": 70.0,
+    "base_spa": 60.0,
+    "base_spd": 60.0,
+    "base_spe": 40.0
+  },
+  "hitmonlee": {
+    "types": [
+      "fighting",
+      "notype"
+    ],
+    "base_hp": 50.0,
+    "base_atk": 120.0,
+    "base_def": 53.0,
+    "base_spa": 35.0,
+    "base_spd": 110.0,
+    "base_spe": 87.0
+  },
+  "bellossom": {
+    "types": [
+      "grass",
+      "notype"
+    ],
+    "base_hp": 75.0,
+    "base_atk": 80.0,
+    "base_def": 85.0,
+    "base_spa": 90.0,
+    "base_spd": 100.0,
+    "base_spe": 50.0
+  },
+  "magmar": {
+    "types": [
+      "fire",
+      "notype"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 95.0,
+    "base_def": 57.0,
+    "base_spa": 100.0,
+    "base_spd": 85.0,
+    "base_spe": 93.0
+  },
+  "ursaring": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 90.0,
+    "base_atk": 130.0,
+    "base_def": 75.0,
+    "base_spa": 75.0,
+    "base_spd": 75.0,
+    "base_spe": 55.0
+  },
+  "shuckle": {
+    "types": [
+      "bug",
+      "rock"
+    ],
+    "base_hp": 20.0,
+    "base_atk": 10.0,
+    "base_def": 230.0,
+    "base_spa": 10.0,
+    "base_spd": 230.0,
+    "base_spe": 5.0
+  },
+  "seel": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 45.0,
+    "base_def": 55.0,
+    "base_spa": 45.0,
+    "base_spd": 70.0,
+    "base_spe": 45.0
+  },
+  "vileplume": {
+    "types": [
+      "grass",
+      "poison"
+    ],
+    "base_hp": 75.0,
+    "base_atk": 80.0,
+    "base_def": 85.0,
+    "base_spa": 100.0,
+    "base_spd": 90.0,
+    "base_spe": 50.0
+  },
+  "arbok": {
+    "types": [
+      "notype",
+      "poison"
+    ],
+    "base_hp": 60.0,
+    "base_atk": 85.0,
+    "base_def": 69.0,
+    "base_spa": 65.0,
+    "base_spd": 79.0,
+    "base_spe": 80.0
+  },
+  "farfetchd": {
+    "types": [
+      "flying",
+      "normal"
+    ],
+    "base_hp": 52.0,
+    "base_atk": 65.0,
+    "base_def": 55.0,
+    "base_spa": 58.0,
+    "base_spd": 62.0,
+    "base_spe": 60.0
+  },
+  "ditto": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 48.0,
+    "base_atk": 48.0,
+    "base_def": 48.0,
+    "base_spa": 48.0,
+    "base_spd": 48.0,
+    "base_spe": 48.0
+  },
+  "clefairy": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 70.0,
+    "base_atk": 45.0,
+    "base_def": 48.0,
+    "base_spa": 60.0,
+    "base_spd": 65.0,
+    "base_spe": 35.0
+  },
+  "bayleef": {
+    "types": [
+      "grass",
+      "notype"
+    ],
+    "base_hp": 60.0,
+    "base_atk": 62.0,
+    "base_def": 80.0,
+    "base_spa": 63.0,
+    "base_spd": 80.0,
+    "base_spe": 60.0
+  },
+  "butterfree": {
+    "types": [
+      "bug",
+      "flying"
+    ],
+    "base_hp": 60.0,
+    "base_atk": 45.0,
+    "base_def": 50.0,
+    "base_spa": 80.0,
+    "base_spd": 80.0,
+    "base_spe": 70.0
+  },
+  "slowking": {
+    "types": [
+      "psychic",
+      "water"
+    ],
+    "base_hp": 95.0,
+    "base_atk": 75.0,
+    "base_def": 80.0,
+    "base_spa": 100.0,
+    "base_spd": 110.0,
+    "base_spe": 30.0
+  },
+  "elekid": {
+    "types": [
+      "electric",
+      "notype"
+    ],
+    "base_hp": 45.0,
+    "base_atk": 63.0,
+    "base_def": 37.0,
+    "base_spa": 65.0,
+    "base_spd": 55.0,
+    "base_spe": 95.0
+  },
+  "houndour": {
+    "types": [
+      "dark",
+      "fire"
+    ],
+    "base_hp": 45.0,
+    "base_atk": 60.0,
+    "base_def": 30.0,
+    "base_spa": 80.0,
+    "base_spd": 50.0,
+    "base_spe": 65.0
+  },
+  "pineco": {
+    "types": [
+      "bug",
+      "notype"
+    ],
+    "base_hp": 50.0,
+    "base_atk": 65.0,
+    "base_def": 90.0,
+    "base_spa": 35.0,
+    "base_spd": 35.0,
+    "base_spe": 15.0
+  },
+  "machop": {
+    "types": [
+      "fighting",
+      "notype"
+    ],
+    "base_hp": 70.0,
+    "base_atk": 80.0,
+    "base_def": 50.0,
+    "base_spa": 35.0,
+    "base_spd": 35.0,
+    "base_spe": 35.0
+  },
+  "octillery": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 75.0,
+    "base_atk": 105.0,
+    "base_def": 75.0,
+    "base_spa": 105.0,
+    "base_spd": 75.0,
+    "base_spe": 45.0
+  },
+  "hooh": {
+    "types": [
+      "fire",
+      "flying"
+    ],
+    "base_hp": 106.0,
+    "base_atk": 130.0,
+    "base_def": 90.0,
+    "base_spa": 110.0,
+    "base_spd": 154.0,
+    "base_spe": 90.0
+  },
+  "sneasel": {
+    "types": [
+      "dark",
+      "ice"
+    ],
+    "base_hp": 55.0,
+    "base_atk": 95.0,
+    "base_def": 55.0,
+    "base_spa": 35.0,
+    "base_spd": 75.0,
+    "base_spe": 115.0
+  },
+  "gligar": {
+    "types": [
+      "flying",
+      "ground"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 75.0,
+    "base_def": 105.0,
+    "base_spa": 35.0,
+    "base_spd": 65.0,
+    "base_spe": 85.0
+  },
+  "weepinbell": {
+    "types": [
+      "grass",
+      "poison"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 90.0,
+    "base_def": 50.0,
+    "base_spa": 85.0,
+    "base_spd": 45.0,
+    "base_spe": 55.0
+  },
+  "raichu": {
+    "types": [
+      "electric",
+      "notype"
+    ],
+    "base_hp": 60.0,
+    "base_atk": 90.0,
+    "base_def": 55.0,
+    "base_spa": 90.0,
+    "base_spd": 80.0,
+    "base_spe": 100.0
+  },
+  "politoed": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 90.0,
+    "base_atk": 75.0,
+    "base_def": 75.0,
+    "base_spa": 90.0,
+    "base_spd": 100.0,
+    "base_spe": 70.0
+  },
+  "lickitung": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 90.0,
+    "base_atk": 55.0,
+    "base_def": 75.0,
+    "base_spa": 60.0,
+    "base_spd": 75.0,
+    "base_spe": 30.0
+  },
+  "kingler": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 55.0,
+    "base_atk": 130.0,
+    "base_def": 115.0,
+    "base_spa": 50.0,
+    "base_spd": 50.0,
+    "base_spe": 75.0
+  },
+  "sudowoodo": {
+    "types": [
+      "notype",
+      "rock"
+    ],
+    "base_hp": 70.0,
+    "base_atk": 100.0,
+    "base_def": 115.0,
+    "base_spa": 30.0,
+    "base_spd": 65.0,
+    "base_spe": 30.0
+  },
+  "hoppip": {
+    "types": [
+      "flying",
+      "grass"
+    ],
+    "base_hp": 35.0,
+    "base_atk": 35.0,
+    "base_def": 40.0,
+    "base_spa": 35.0,
+    "base_spd": 55.0,
+    "base_spe": 50.0
+  },
+  "marill": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 70.0,
+    "base_atk": 20.0,
+    "base_def": 50.0,
+    "base_spa": 20.0,
+    "base_spd": 50.0,
+    "base_spe": 40.0
+  },
+  "swinub": {
+    "types": [
+      "ground",
+      "ice"
+    ],
+    "base_hp": 50.0,
+    "base_atk": 50.0,
+    "base_def": 40.0,
+    "base_spa": 30.0,
+    "base_spd": 30.0,
+    "base_spe": 50.0
+  },
+  "pichu": {
+    "types": [
+      "electric",
+      "notype"
+    ],
+    "base_hp": 20.0,
+    "base_atk": 40.0,
+    "base_def": 15.0,
+    "base_spa": 35.0,
+    "base_spd": 35.0,
+    "base_spe": 60.0
+  },
+  "pidgey": {
+    "types": [
+      "flying",
+      "normal"
+    ],
+    "base_hp": 40.0,
+    "base_atk": 45.0,
+    "base_def": 40.0,
+    "base_spa": 35.0,
+    "base_spd": 35.0,
+    "base_spe": 56.0
+  },
+  "venonat": {
+    "types": [
+      "bug",
+      "poison"
+    ],
+    "base_hp": 60.0,
+    "base_atk": 55.0,
+    "base_def": 50.0,
+    "base_spa": 40.0,
+    "base_spd": 55.0,
+    "base_spe": 45.0
+  },
+  "golbat": {
+    "types": [
+      "flying",
+      "poison"
+    ],
+    "base_hp": 75.0,
+    "base_atk": 80.0,
+    "base_def": 70.0,
+    "base_spa": 65.0,
+    "base_spd": 75.0,
+    "base_spe": 90.0
+  },
+  "persian": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 70.0,
+    "base_def": 60.0,
+    "base_spa": 65.0,
+    "base_spd": 65.0,
+    "base_spe": 115.0
+  },
+  "arcanine": {
+    "types": [
+      "fire",
+      "notype"
+    ],
+    "base_hp": 90.0,
+    "base_atk": 110.0,
+    "base_def": 80.0,
+    "base_spa": 100.0,
+    "base_spd": 80.0,
+    "base_spe": 95.0
+  },
+  "kabutops": {
+    "types": [
+      "rock",
+      "water"
+    ],
+    "base_hp": 60.0,
+    "base_atk": 115.0,
+    "base_def": 105.0,
+    "base_spa": 65.0,
+    "base_spd": 70.0,
+    "base_spe": 80.0
+  },
+  "koffing": {
+    "types": [
+      "notype",
+      "poison"
+    ],
+    "base_hp": 40.0,
+    "base_atk": 65.0,
+    "base_def": 95.0,
+    "base_spa": 60.0,
+    "base_spd": 45.0,
+    "base_spe": 35.0
+  },
+  "doduo": {
+    "types": [
+      "flying",
+      "normal"
+    ],
+    "base_hp": 35.0,
+    "base_atk": 85.0,
+    "base_def": 45.0,
+    "base_spa": 35.0,
+    "base_spd": 35.0,
+    "base_spe": 75.0
+  },
+  "teddiursa": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 60.0,
+    "base_atk": 80.0,
+    "base_def": 50.0,
+    "base_spa": 50.0,
+    "base_spd": 50.0,
+    "base_spe": 40.0
+  },
+  "sunkern": {
+    "types": [
+      "grass",
+      "notype"
+    ],
+    "base_hp": 30.0,
+    "base_atk": 30.0,
+    "base_def": 30.0,
+    "base_spa": 30.0,
+    "base_spd": 30.0,
+    "base_spe": 30.0
+  },
+  "lapras": {
+    "types": [
+      "ice",
+      "water"
+    ],
+    "base_hp": 130.0,
+    "base_atk": 85.0,
+    "base_def": 80.0,
+    "base_spa": 85.0,
+    "base_spd": 95.0,
+    "base_spe": 60.0
+  },
+  "meowth": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 40.0,
+    "base_atk": 45.0,
+    "base_def": 35.0,
+    "base_spa": 40.0,
+    "base_spd": 40.0,
+    "base_spe": 90.0
+  },
+  "dratini": {
+    "types": [
+      "dragon",
+      "notype"
+    ],
+    "base_hp": 41.0,
+    "base_atk": 64.0,
+    "base_def": 45.0,
+    "base_spa": 50.0,
+    "base_spd": 50.0,
+    "base_spe": 50.0
+  },
+  "diglett": {
+    "types": [
+      "ground",
+      "notype"
+    ],
+    "base_hp": 10.0,
+    "base_atk": 55.0,
+    "base_def": 25.0,
+    "base_spa": 35.0,
+    "base_spd": 45.0,
+    "base_spe": 95.0
+  },
+  "nidoranf": {
+    "types": [
+      "notype",
+      "poison"
+    ],
+    "base_hp": 55.0,
+    "base_atk": 47.0,
+    "base_def": 52.0,
+    "base_spa": 40.0,
+    "base_spd": 40.0,
+    "base_spe": 41.0
+  },
+  "onix": {
+    "types": [
+      "ground",
+      "rock"
+    ],
+    "base_hp": 35.0,
+    "base_atk": 45.0,
+    "base_def": 160.0,
+    "base_spa": 30.0,
+    "base_spd": 45.0,
+    "base_spe": 70.0
+  },
+  "sunflora": {
+    "types": [
+      "grass",
+      "notype"
+    ],
+    "base_hp": 75.0,
+    "base_atk": 75.0,
+    "base_def": 55.0,
+    "base_spa": 105.0,
+    "base_spd": 85.0,
+    "base_spe": 30.0
+  },
+  "delibird": {
+    "types": [
+      "flying",
+      "ice"
+    ],
+    "base_hp": 45.0,
+    "base_atk": 55.0,
+    "base_def": 45.0,
+    "base_spa": 65.0,
+    "base_spd": 45.0,
+    "base_spe": 75.0
+  },
+  "ninetales": {
+    "types": [
+      "fire",
+      "notype"
+    ],
+    "base_hp": 73.0,
+    "base_atk": 76.0,
+    "base_def": 75.0,
+    "base_spa": 81.0,
+    "base_spd": 100.0,
+    "base_spe": 100.0
+  },
+  "ledian": {
+    "types": [
+      "bug",
+      "flying"
+    ],
+    "base_hp": 55.0,
+    "base_atk": 35.0,
+    "base_def": 50.0,
+    "base_spa": 55.0,
+    "base_spd": 110.0,
+    "base_spe": 85.0
+  },
+  "wigglytuff": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 140.0,
+    "base_atk": 70.0,
+    "base_def": 45.0,
+    "base_spa": 75.0,
+    "base_spd": 50.0,
+    "base_spe": 45.0
+  },
+  "magcargo": {
+    "types": [
+      "fire",
+      "rock"
+    ],
+    "base_hp": 50.0,
+    "base_atk": 50.0,
+    "base_def": 120.0,
+    "base_spa": 80.0,
+    "base_spd": 80.0,
+    "base_spe": 30.0
+  },
+  "togetic": {
+    "types": [
+      "flying",
+      "normal"
+    ],
+    "base_hp": 55.0,
+    "base_atk": 40.0,
+    "base_def": 85.0,
+    "base_spa": 80.0,
+    "base_spd": 105.0,
+    "base_spe": 40.0
+  },
+  "xatu": {
+    "types": [
+      "flying",
+      "psychic"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 75.0,
+    "base_def": 70.0,
+    "base_spa": 95.0,
+    "base_spd": 70.0,
+    "base_spe": 95.0
+  },
+  "sandshrew": {
+    "types": [
+      "ground",
+      "notype"
+    ],
+    "base_hp": 50.0,
+    "base_atk": 75.0,
+    "base_def": 85.0,
+    "base_spa": 20.0,
+    "base_spd": 30.0,
+    "base_spe": 40.0
+  },
+  "igglybuff": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 90.0,
+    "base_atk": 30.0,
+    "base_def": 15.0,
+    "base_spa": 40.0,
+    "base_spd": 20.0,
+    "base_spe": 15.0
+  },
+  "growlithe": {
+    "types": [
+      "fire",
+      "notype"
+    ],
+    "base_hp": 55.0,
+    "base_atk": 70.0,
+    "base_def": 45.0,
+    "base_spa": 70.0,
+    "base_spd": 50.0,
+    "base_spe": 60.0
+  },
+  "cubone": {
+    "types": [
+      "ground",
+      "notype"
+    ],
+    "base_hp": 50.0,
+    "base_atk": 50.0,
+    "base_def": 95.0,
+    "base_spa": 40.0,
+    "base_spd": 50.0,
+    "base_spe": 35.0
+  },
+  "raticate": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 55.0,
+    "base_atk": 81.0,
+    "base_def": 60.0,
+    "base_spa": 50.0,
+    "base_spd": 70.0,
+    "base_spe": 97.0
+  },
+  "flaaffy": {
+    "types": [
+      "electric",
+      "notype"
+    ],
+    "base_hp": 70.0,
+    "base_atk": 55.0,
+    "base_def": 55.0,
+    "base_spa": 80.0,
+    "base_spd": 60.0,
+    "base_spe": 45.0
+  },
+  "dewgong": {
+    "types": [
+      "ice",
+      "water"
+    ],
+    "base_hp": 90.0,
+    "base_atk": 70.0,
+    "base_def": 80.0,
+    "base_spa": 70.0,
+    "base_spd": 95.0,
+    "base_spe": 70.0
+  },
+  "slowpoke": {
+    "types": [
+      "psychic",
+      "water"
+    ],
+    "base_hp": 90.0,
+    "base_atk": 65.0,
+    "base_def": 65.0,
+    "base_spa": 40.0,
+    "base_spd": 40.0,
+    "base_spe": 15.0
+  },
+  "togepi": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 35.0,
+    "base_atk": 20.0,
+    "base_def": 65.0,
+    "base_spa": 40.0,
+    "base_spd": 65.0,
+    "base_spe": 20.0
+  },
+  "zubat": {
+    "types": [
+      "flying",
+      "poison"
+    ],
+    "base_hp": 40.0,
+    "base_atk": 45.0,
+    "base_def": 35.0,
+    "base_spa": 30.0,
+    "base_spd": 40.0,
+    "base_spe": 55.0
+  },
+  "golduck": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 80.0,
+    "base_atk": 82.0,
+    "base_def": 78.0,
+    "base_spa": 95.0,
+    "base_spd": 80.0,
+    "base_spe": 85.0
+  },
+  "furret": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 85.0,
+    "base_atk": 76.0,
+    "base_def": 64.0,
+    "base_spa": 45.0,
+    "base_spd": 55.0,
+    "base_spe": 90.0
+  },
+  "drowzee": {
+    "types": [
+      "notype",
+      "psychic"
+    ],
+    "base_hp": 60.0,
+    "base_atk": 48.0,
+    "base_def": 45.0,
+    "base_spa": 43.0,
+    "base_spd": 90.0,
+    "base_spe": 42.0
+  },
+  "dragonair": {
+    "types": [
+      "dragon",
+      "notype"
+    ],
+    "base_hp": 61.0,
+    "base_atk": 84.0,
+    "base_def": 65.0,
+    "base_spa": 70.0,
+    "base_spd": 70.0,
+    "base_spe": 70.0
+  },
+  "gloom": {
+    "types": [
+      "grass",
+      "poison"
+    ],
+    "base_hp": 60.0,
+    "base_atk": 65.0,
+    "base_def": 70.0,
+    "base_spa": 85.0,
+    "base_spd": 75.0,
+    "base_spe": 40.0
+  },
+  "wobbuffet": {
+    "types": [
+      "notype",
+      "psychic"
+    ],
+    "base_hp": 190.0,
+    "base_atk": 33.0,
+    "base_def": 58.0,
+    "base_spa": 33.0,
+    "base_spd": 58.0,
+    "base_spe": 33.0
+  },
+  "dunsparce": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 100.0,
+    "base_atk": 70.0,
+    "base_def": 70.0,
+    "base_spa": 65.0,
+    "base_spd": 65.0,
+    "base_spe": 45.0
+  },
+  "parasect": {
+    "types": [
+      "bug",
+      "grass"
+    ],
+    "base_hp": 60.0,
+    "base_atk": 95.0,
+    "base_def": 80.0,
+    "base_spa": 60.0,
+    "base_spd": 80.0,
+    "base_spe": 30.0
+  },
+  "noctowl": {
+    "types": [
+      "flying",
+      "normal"
+    ],
+    "base_hp": 100.0,
+    "base_atk": 50.0,
+    "base_def": 50.0,
+    "base_spa": 76.0,
+    "base_spd": 96.0,
+    "base_spe": 70.0
+  },
+  "cyndaquil": {
+    "types": [
+      "fire",
+      "notype"
+    ],
+    "base_hp": 39.0,
+    "base_atk": 52.0,
+    "base_def": 43.0,
+    "base_spa": 60.0,
+    "base_spd": 50.0,
+    "base_spe": 65.0
+  },
+  "totodile": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 50.0,
+    "base_atk": 65.0,
+    "base_def": 64.0,
+    "base_spa": 44.0,
+    "base_spd": 48.0,
+    "base_spe": 43.0
+  },
+  "phanpy": {
+    "types": [
+      "ground",
+      "notype"
+    ],
+    "base_hp": 90.0,
+    "base_atk": 60.0,
+    "base_def": 60.0,
+    "base_spa": 40.0,
+    "base_spd": 40.0,
+    "base_spe": 40.0
+  },
+  "mantine": {
+    "types": [
+      "flying",
+      "water"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 40.0,
+    "base_def": 70.0,
+    "base_spa": 80.0,
+    "base_spd": 140.0,
+    "base_spe": 70.0
+  },
+  "magby": {
+    "types": [
+      "fire",
+      "notype"
+    ],
+    "base_hp": 45.0,
+    "base_atk": 75.0,
+    "base_def": 37.0,
+    "base_spa": 70.0,
+    "base_spd": 55.0,
+    "base_spe": 83.0
+  },
+  "abra": {
+    "types": [
+      "notype",
+      "psychic"
+    ],
+    "base_hp": 25.0,
+    "base_atk": 20.0,
+    "base_def": 15.0,
+    "base_spa": 105.0,
+    "base_spd": 55.0,
+    "base_spe": 90.0
+  },
+  "seadra": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 55.0,
+    "base_atk": 65.0,
+    "base_def": 95.0,
+    "base_spa": 95.0,
+    "base_spd": 45.0,
+    "base_spe": 85.0
+  },
+  "yanma": {
+    "types": [
+      "bug",
+      "flying"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 65.0,
+    "base_def": 45.0,
+    "base_spa": 75.0,
+    "base_spd": 45.0,
+    "base_spe": 95.0
+  },
+  "beedrill": {
+    "types": [
+      "bug",
+      "poison"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 80.0,
+    "base_def": 40.0,
+    "base_spa": 45.0,
+    "base_spd": 80.0,
+    "base_spe": 75.0
+  },
+  "pupitar": {
+    "types": [
+      "ground",
+      "rock"
+    ],
+    "base_hp": 70.0,
+    "base_atk": 84.0,
+    "base_def": 70.0,
+    "base_spa": 65.0,
+    "base_spd": 70.0,
+    "base_spe": 51.0
+  },
+  "charmeleon": {
+    "types": [
+      "fire",
+      "notype"
+    ],
+    "base_hp": 58.0,
+    "base_atk": 64.0,
+    "base_def": 58.0,
+    "base_spa": 80.0,
+    "base_spd": 65.0,
+    "base_spe": 80.0
+  },
+  "omastar": {
+    "types": [
+      "rock",
+      "water"
+    ],
+    "base_hp": 70.0,
+    "base_atk": 60.0,
+    "base_def": 125.0,
+    "base_spa": 115.0,
+    "base_spd": 70.0,
+    "base_spe": 55.0
+  },
+  "porygon": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 60.0,
+    "base_def": 70.0,
+    "base_spa": 85.0,
+    "base_spd": 75.0,
+    "base_spe": 40.0
+  },
+  "corsola": {
+    "types": [
+      "rock",
+      "water"
+    ],
+    "base_hp": 55.0,
+    "base_atk": 55.0,
+    "base_def": 85.0,
+    "base_spa": 65.0,
+    "base_spd": 85.0,
+    "base_spe": 35.0
+  },
+  "squirtle": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 44.0,
+    "base_atk": 48.0,
+    "base_def": 65.0,
+    "base_spa": 50.0,
+    "base_spd": 64.0,
+    "base_spe": 43.0
+  },
+  "bulbasaur": {
+    "types": [
+      "grass",
+      "poison"
+    ],
+    "base_hp": 45.0,
+    "base_atk": 49.0,
+    "base_def": 49.0,
+    "base_spa": 65.0,
+    "base_spd": 65.0,
+    "base_spe": 45.0
+  },
+  "kabuto": {
+    "types": [
+      "rock",
+      "water"
+    ],
+    "base_hp": 30.0,
+    "base_atk": 80.0,
+    "base_def": 90.0,
+    "base_spa": 55.0,
+    "base_spd": 45.0,
+    "base_spe": 55.0
+  },
+  "goldeen": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 45.0,
+    "base_atk": 67.0,
+    "base_def": 60.0,
+    "base_spa": 35.0,
+    "base_spd": 50.0,
+    "base_spe": 63.0
+  },
+  "sentret": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 35.0,
+    "base_atk": 46.0,
+    "base_def": 34.0,
+    "base_spa": 35.0,
+    "base_spd": 45.0,
+    "base_spe": 20.0
+  },
+  "tangela": {
+    "types": [
+      "grass",
+      "notype"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 55.0,
+    "base_def": 115.0,
+    "base_spa": 100.0,
+    "base_spd": 40.0,
+    "base_spe": 60.0
+  },
+  "hoothoot": {
+    "types": [
+      "flying",
+      "normal"
+    ],
+    "base_hp": 60.0,
+    "base_atk": 30.0,
+    "base_def": 30.0,
+    "base_spa": 36.0,
+    "base_spd": 56.0,
+    "base_spe": 50.0
+  },
+  "seaking": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 80.0,
+    "base_atk": 92.0,
+    "base_def": 65.0,
+    "base_spa": 65.0,
+    "base_spd": 80.0,
+    "base_spe": 68.0
+  },
+  "chikorita": {
+    "types": [
+      "grass",
+      "notype"
+    ],
+    "base_hp": 45.0,
+    "base_atk": 49.0,
+    "base_def": 65.0,
+    "base_spa": 49.0,
+    "base_spd": 65.0,
+    "base_spe": 45.0
+  },
+  "chinchou": {
+    "types": [
+      "electric",
+      "water"
+    ],
+    "base_hp": 75.0,
+    "base_atk": 38.0,
+    "base_def": 38.0,
+    "base_spa": 56.0,
+    "base_spd": 56.0,
+    "base_spe": 67.0
+  },
+  "voltorb": {
+    "types": [
+      "electric",
+      "notype"
+    ],
+    "base_hp": 40.0,
+    "base_atk": 30.0,
+    "base_def": 50.0,
+    "base_spa": 55.0,
+    "base_spd": 55.0,
+    "base_spe": 100.0
+  },
+  "krabby": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 30.0,
+    "base_atk": 105.0,
+    "base_def": 90.0,
+    "base_spa": 25.0,
+    "base_spd": 25.0,
+    "base_spe": 50.0
+  },
+  "poliwag": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 40.0,
+    "base_atk": 50.0,
+    "base_def": 40.0,
+    "base_spa": 40.0,
+    "base_spd": 40.0,
+    "base_spe": 90.0
+  },
+  "paras": {
+    "types": [
+      "bug",
+      "grass"
+    ],
+    "base_hp": 35.0,
+    "base_atk": 70.0,
+    "base_def": 55.0,
+    "base_spa": 45.0,
+    "base_spd": 55.0,
+    "base_spe": 25.0
+  },
+  "omanyte": {
+    "types": [
+      "rock",
+      "water"
+    ],
+    "base_hp": 35.0,
+    "base_atk": 40.0,
+    "base_def": 100.0,
+    "base_spa": 90.0,
+    "base_spd": 55.0,
+    "base_spe": 35.0
+  },
+  "ponyta": {
+    "types": [
+      "fire",
+      "notype"
+    ],
+    "base_hp": 50.0,
+    "base_atk": 85.0,
+    "base_def": 55.0,
+    "base_spa": 65.0,
+    "base_spd": 65.0,
+    "base_spe": 90.0
+  },
+  "nidorino": {
+    "types": [
+      "notype",
+      "poison"
+    ],
+    "base_hp": 61.0,
+    "base_atk": 72.0,
+    "base_def": 57.0,
+    "base_spa": 55.0,
+    "base_spd": 55.0,
+    "base_spe": 65.0
+  },
+  "geodude": {
+    "types": [
+      "ground",
+      "rock"
+    ],
+    "base_hp": 40.0,
+    "base_atk": 80.0,
+    "base_def": 100.0,
+    "base_spa": 30.0,
+    "base_spd": 30.0,
+    "base_spe": 20.0
+  },
+  "oddish": {
+    "types": [
+      "grass",
+      "poison"
+    ],
+    "base_hp": 45.0,
+    "base_atk": 50.0,
+    "base_def": 55.0,
+    "base_spa": 75.0,
+    "base_spd": 65.0,
+    "base_spe": 30.0
+  },
+  "croconaw": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 65.0,
+    "base_atk": 80.0,
+    "base_def": 80.0,
+    "base_spa": 59.0,
+    "base_spd": 63.0,
+    "base_spe": 58.0
+  },
+  "rhyhorn": {
+    "types": [
+      "ground",
+      "rock"
+    ],
+    "base_hp": 80.0,
+    "base_atk": 85.0,
+    "base_def": 95.0,
+    "base_spa": 30.0,
+    "base_spd": 30.0,
+    "base_spe": 25.0
+  },
+  "jigglypuff": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 115.0,
+    "base_atk": 45.0,
+    "base_def": 20.0,
+    "base_spa": 45.0,
+    "base_spd": 25.0,
+    "base_spe": 20.0
+  },
+  "shellder": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 30.0,
+    "base_atk": 65.0,
+    "base_def": 100.0,
+    "base_spa": 45.0,
+    "base_spd": 25.0,
+    "base_spe": 40.0
+  },
+  "grimer": {
+    "types": [
+      "notype",
+      "poison"
+    ],
+    "base_hp": 80.0,
+    "base_atk": 80.0,
+    "base_def": 50.0,
+    "base_spa": 40.0,
+    "base_spd": 50.0,
+    "base_spe": 25.0
+  },
+  "spinarak": {
+    "types": [
+      "bug",
+      "poison"
+    ],
+    "base_hp": 40.0,
+    "base_atk": 60.0,
+    "base_def": 40.0,
+    "base_spa": 40.0,
+    "base_spd": 40.0,
+    "base_spe": 30.0
+  },
+  "smoochum": {
+    "types": [
+      "ice",
+      "psychic"
+    ],
+    "base_hp": 45.0,
+    "base_atk": 30.0,
+    "base_def": 15.0,
+    "base_spa": 85.0,
+    "base_spd": 65.0,
+    "base_spe": 65.0
+  },
+  "metapod": {
+    "types": [
+      "bug",
+      "notype"
+    ],
+    "base_hp": 50.0,
+    "base_atk": 20.0,
+    "base_def": 55.0,
+    "base_spa": 25.0,
+    "base_spd": 25.0,
+    "base_spe": 30.0
+  },
+  "skiploom": {
+    "types": [
+      "flying",
+      "grass"
+    ],
+    "base_hp": 55.0,
+    "base_atk": 45.0,
+    "base_def": 50.0,
+    "base_spa": 45.0,
+    "base_spd": 65.0,
+    "base_spe": 80.0
+  },
+  "larvitar": {
+    "types": [
+      "ground",
+      "rock"
+    ],
+    "base_hp": 50.0,
+    "base_atk": 64.0,
+    "base_def": 50.0,
+    "base_spa": 45.0,
+    "base_spd": 50.0,
+    "base_spe": 41.0
+  },
+  "spearow": {
+    "types": [
+      "flying",
+      "normal"
+    ],
+    "base_hp": 40.0,
+    "base_atk": 60.0,
+    "base_def": 30.0,
+    "base_spa": 31.0,
+    "base_spd": 31.0,
+    "base_spe": 70.0
+  },
+  "gengarmega": {
+    "types": [
+      "ghost",
+      "poison"
+    ],
+    "base_hp": 60.0,
+    "base_atk": 65.0,
+    "base_def": 80.0,
+    "base_spa": 170.0,
+    "base_spd": 95.0,
+    "base_spe": 130.0
+  },
+  "mareep": {
+    "types": [
+      "electric",
+      "notype"
+    ],
+    "base_hp": 55.0,
+    "base_atk": 40.0,
+    "base_def": 40.0,
+    "base_spa": 65.0,
+    "base_spd": 45.0,
+    "base_spe": 35.0
+  },
+  "psyduck": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 50.0,
+    "base_atk": 52.0,
+    "base_def": 48.0,
+    "base_spa": 65.0,
+    "base_spd": 50.0,
+    "base_spe": 55.0
+  },
+  "azumarill": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 100.0,
+    "base_atk": 50.0,
+    "base_def": 80.0,
+    "base_spa": 50.0,
+    "base_spd": 80.0,
+    "base_spe": 50.0
+  },
+  "mewtwo": {
+    "types": [
+      "notype",
+      "psychic"
+    ],
+    "base_hp": 106.0,
+    "base_atk": 110.0,
+    "base_def": 90.0,
+    "base_spa": 154.0,
+    "base_spd": 90.0,
+    "base_spe": 130.0
+  },
+  "snubbull": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 60.0,
+    "base_atk": 80.0,
+    "base_def": 50.0,
+    "base_spa": 40.0,
+    "base_spd": 40.0,
+    "base_spe": 30.0
+  },
+  "bellsprout": {
+    "types": [
+      "grass",
+      "poison"
+    ],
+    "base_hp": 50.0,
+    "base_atk": 75.0,
+    "base_def": 35.0,
+    "base_spa": 70.0,
+    "base_spd": 30.0,
+    "base_spe": 40.0
+  },
+  "charmander": {
+    "types": [
+      "fire",
+      "notype"
+    ],
+    "base_hp": 39.0,
+    "base_atk": 52.0,
+    "base_def": 43.0,
+    "base_spa": 60.0,
+    "base_spd": 50.0,
+    "base_spe": 65.0
+  },
+  "wooper": {
+    "types": [
+      "ground",
+      "water"
+    ],
+    "base_hp": 55.0,
+    "base_atk": 45.0,
+    "base_def": 45.0,
+    "base_spa": 25.0,
+    "base_spd": 25.0,
+    "base_spe": 15.0
+  },
+  "eevee": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 55.0,
+    "base_atk": 55.0,
+    "base_def": 50.0,
+    "base_spa": 45.0,
+    "base_spd": 65.0,
+    "base_spe": 55.0
+  },
+  "caterpie": {
+    "types": [
+      "bug",
+      "notype"
+    ],
+    "base_hp": 45.0,
+    "base_atk": 30.0,
+    "base_def": 35.0,
+    "base_spa": 20.0,
+    "base_spd": 20.0,
+    "base_spe": 45.0
+  },
+  "nidoranm": {
+    "types": [
+      "notype",
+      "poison"
+    ],
+    "base_hp": 46.0,
+    "base_atk": 57.0,
+    "base_def": 40.0,
+    "base_spa": 40.0,
+    "base_spd": 40.0,
+    "base_spe": 50.0
+  },
+  "ekans": {
+    "types": [
+      "notype",
+      "poison"
+    ],
+    "base_hp": 35.0,
+    "base_atk": 60.0,
+    "base_def": 44.0,
+    "base_spa": 40.0,
+    "base_spd": 54.0,
+    "base_spe": 55.0
+  },
+  "tentacool": {
+    "types": [
+      "poison",
+      "water"
+    ],
+    "base_hp": 40.0,
+    "base_atk": 40.0,
+    "base_def": 35.0,
+    "base_spa": 50.0,
+    "base_spd": 100.0,
+    "base_spe": 70.0
+  },
+  "tyrogue": {
+    "types": [
+      "fighting",
+      "notype"
+    ],
+    "base_hp": 35.0,
+    "base_atk": 35.0,
+    "base_def": 35.0,
+    "base_spa": 35.0,
+    "base_spd": 35.0,
+    "base_spe": 35.0
+  },
+  "slugma": {
+    "types": [
+      "fire",
+      "notype"
+    ],
+    "base_hp": 40.0,
+    "base_atk": 40.0,
+    "base_def": 40.0,
+    "base_spa": 70.0,
+    "base_spd": 40.0,
+    "base_spe": 20.0
+  },
+  "horsea": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 30.0,
+    "base_atk": 40.0,
+    "base_def": 70.0,
+    "base_spa": 70.0,
+    "base_spd": 25.0,
+    "base_spe": 60.0
+  },
+  "celebi": {
+    "types": [
+      "grass",
+      "psychic"
+    ],
+    "base_hp": 100.0,
+    "base_atk": 100.0,
+    "base_def": 100.0,
+    "base_spa": 100.0,
+    "base_spd": 100.0,
+    "base_spe": 100.0
+  },
+  "kakuna": {
+    "types": [
+      "bug",
+      "poison"
+    ],
+    "base_hp": 45.0,
+    "base_atk": 25.0,
+    "base_def": 50.0,
+    "base_spa": 25.0,
+    "base_spd": 25.0,
+    "base_spe": 35.0
+  },
+  "alakazammega": {
+    "types": [
+      "notype",
+      "psychic"
+    ],
+    "base_hp": 55.0,
+    "base_atk": 50.0,
+    "base_def": 65.0,
+    "base_spa": 175.0,
+    "base_spd": 95.0,
+    "base_spe": 150.0
+  },
+  "magikarp": {
+    "types": [
+      "notype",
+      "water"
+    ],
+    "base_hp": 20.0,
+    "base_atk": 10.0,
+    "base_def": 55.0,
+    "base_spa": 15.0,
+    "base_spd": 20.0,
+    "base_spe": 80.0
+  },
+  "cleffa": {
+    "types": [
+      "normal",
+      "notype"
+    ],
+    "base_hp": 50.0,
+    "base_atk": 25.0,
+    "base_def": 28.0,
+    "base_spa": 45.0,
+    "base_spd": 55.0,
+    "base_spe": 15.0
+  },
+  "unown": {
+    "types": [
+      "notype",
+      "psychic"
+    ],
+    "base_hp": 48.0,
+    "base_atk": 72.0,
+    "base_def": 48.0,
+    "base_spa": 72.0,
+    "base_spd": 48.0,
+    "base_spe": 48.0
+  },
+  "natu": {
+    "types": [
+      "flying",
+      "psychic"
+    ],
+    "base_hp": 40.0,
+    "base_atk": 50.0,
+    "base_def": 45.0,
+    "base_spa": 70.0,
+    "base_spd": 45.0,
+    "base_spe": 70.0
+  },
+  "ledyba": {
+    "types": [
+      "bug",
+      "flying"
+    ],
+    "base_hp": 40,
+    "base_atk": 20,
+    "base_def": 30,
+    "base_spa": 40,
+    "base_spd": 80,
+    "base_spe": 55
+  },
+  "remoraid": {
+    "types": [
+      "water"
+    ],
+    "base_hp": 35,
+    "base_atk": 65,
+    "base_def": 35,
+    "base_spa": 65,
+    "base_spd": 35,
+    "base_spe": 65
+  },
+  "nidorina": {
+    "types": [
+      "poison"
+    ],
+    "base_hp": 70,
+    "base_atk": 62,
+    "base_def": 67,
+    "base_spa": 55,
+    "base_spd": 55,
+    "base_spe": 56
+  }
+}

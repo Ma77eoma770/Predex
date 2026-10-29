@@ -14,7 +14,10 @@ import time
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
-# Ensure project root in sys.path
+# Ensure project root in sys.path and avoid shadowing stdlib (e.g. selectors.py)
+CURRENT_DIR = str(Path(__file__).resolve().parent)
+if sys.path and sys.path[0] == CURRENT_DIR:
+    sys.path.pop(0)
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
