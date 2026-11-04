@@ -5,7 +5,7 @@ Upgrades:
 2. Infinite Stall Lock & Active Recovery: 50% heals, Rest + Curse snowball loop in rollout,
    and rf_diff_infinite_stall_locks (threshold < 0.31).
 3. Latent Detonation Value: Explosion/Self-Destruct Def-halving (500 BP eff) via rf_diff_latent_boom_leverage.
-4. Empirical Move Coverage Priors: P(m|s) from data/empirical_move_priors.json integrated into d_hat.
+4. Empirical Move Coverage Priors: P(m|s) computed from train.jsonl only (src/features/data_priors.py) integrated into d_hat.
 5. Proactive Switch at Turn 31 in Rollout.
 6. Non-Linear Regime-Switching Features:
    - rf_comeback_override_signal
@@ -19,11 +19,12 @@ Prefix: rf_
 import json
 import math
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, FrozenSet, List, Optional, Set, Tuple
 
 import numpy as np
 import pandas as pd
 
+from src.features.data_priors import move_priors, move_users, species_frequency, top_species
 from src.config import DATA_DIR, TYPE_CHART_CSV
 
 PREFIX = "rf_"
@@ -42,36 +43,14 @@ STAGE_MULT: Dict[int, float] = {
     0: 1.0, 1: 1.5, 2: 2.0, 3: 2.5, 4: 3.0, 5: 3.5, 6: 4.0
 }
 
-BOOM_SPECIES: Set[str] = {
-    "forretress", "cloyster", "exeggutor", "gengar", "snorlax", "steelix", "golem", "electrode", "weezing"
-}
+# Pulizia 04/11 (persona D): le liste scritte a mano (chi usa Explosion, i 20 Pokémon più usati in OU
+# con le loro frequenze d'uso) sono state sostituite da statistiche calcolate dal solo train.jsonl
+# (src/features/data_priors.py): il regolamento vieta usage statistics e tabelle raccolte a mano.
+BOOM_SPECIES: FrozenSet[str] = move_users(frozenset({"explosion", "selfdestruct"}))
+TOP_OU_K = 20  # specie più frequenti nelle squadre di P1 del train
 
-TOP_OU_PRIORS: List[Dict[str, Any]] = [
-    {"name": "snorlax", "types": ["normal"], "hp": 160, "atk": 110, "def": 65, "spa": 65, "spd": 110, "spe": 30, "freq": 0.95},
-    {"name": "zapdos", "types": ["electric", "flying"], "hp": 90, "atk": 90, "def": 85, "spa": 125, "spd": 90, "spe": 100, "freq": 0.55},
-    {"name": "raikou", "types": ["electric"], "hp": 90, "atk": 85, "def": 75, "spa": 115, "spd": 115, "spe": 115, "freq": 0.45},
-    {"name": "cloyster", "types": ["water", "ice"], "hp": 50, "atk": 95, "def": 180, "spa": 85, "spd": 45, "spe": 70, "freq": 0.45},
-    {"name": "skarmory", "types": ["steel", "flying"], "hp": 65, "atk": 80, "def": 140, "spa": 40, "spd": 70, "spe": 70, "freq": 0.40},
-    {"name": "suicune", "types": ["water"], "hp": 100, "atk": 75, "def": 115, "spa": 90, "spd": 115, "spe": 85, "freq": 0.35},
-    {"name": "tyranitar", "types": ["rock", "dark"], "hp": 100, "atk": 134, "def": 110, "spa": 95, "spd": 100, "spe": 61, "freq": 0.35},
-    {"name": "gengar", "types": ["ghost", "poison"], "hp": 60, "atk": 65, "def": 60, "spa": 130, "spd": 75, "spe": 110, "freq": 0.30},
-    {"name": "forretress", "types": ["bug", "steel"], "hp": 75, "atk": 90, "def": 140, "spa": 60, "spd": 60, "spe": 40, "freq": 0.30},
-    {"name": "starmie", "types": ["water", "psychic"], "hp": 60, "atk": 75, "def": 85, "spa": 100, "spd": 85, "spe": 115, "freq": 0.25},
-    {"name": "exeggutor", "types": ["grass", "psychic"], "hp": 95, "atk": 95, "def": 85, "spa": 125, "spd": 65, "spe": 55, "freq": 0.25},
-    {"name": "marowak", "types": ["ground"], "hp": 60, "atk": 80, "def": 110, "spa": 50, "spd": 80, "spe": 45, "freq": 0.20},
-    {"name": "machamp", "types": ["fighting"], "hp": 90, "atk": 130, "def": 80, "spa": 65, "spd": 85, "spe": 55, "freq": 0.20},
-    {"name": "heracross", "types": ["bug", "fighting"], "hp": 80, "atk": 125, "def": 75, "spa": 40, "spd": 95, "spe": 85, "freq": 0.20},
-    {"name": "miltank", "types": ["normal"], "hp": 95, "atk": 80, "def": 105, "spa": 40, "spd": 70, "spe": 100, "freq": 0.18},
-    {"name": "nidoking", "types": ["poison", "ground"], "hp": 81, "atk": 92, "def": 77, "spa": 85, "spd": 75, "spe": 85, "freq": 0.18},
-    {"name": "umbreon", "types": ["dark"], "hp": 95, "atk": 65, "def": 110, "spa": 60, "spd": 130, "spe": 65, "freq": 0.15},
-    {"name": "vaporeon", "types": ["water"], "hp": 130, "atk": 65, "def": 60, "spa": 110, "spd": 95, "spe": 65, "freq": 0.15},
-    {"name": "jolteon", "types": ["electric"], "hp": 65, "atk": 65, "def": 60, "spa": 110, "spd": 95, "spe": 130, "freq": 0.15},
-    {"name": "steelix", "types": ["steel", "ground"], "hp": 75, "atk": 85, "def": 200, "spa": 55, "spd": 65, "spe": 30, "freq": 0.15},
-]
-TOP_OU_SPEEDS_LV100: List[float] = sorted([2.0 * p["spe"] + 98.0 for p in TOP_OU_PRIORS])
 
 POKEDEX_JSON_PATH = DATA_DIR / "pokedex.json"
-MOVE_PRIORS_JSON_PATH = DATA_DIR / "empirical_move_priors.json"
 _POKEDEX: Optional[Dict[str, Dict[str, Any]]] = None
 _TYPE_CHART: Optional[Dict[Tuple[str, str], float]] = None
 _MOVE_PRIORS: Optional[Dict[str, List[Dict[str, Any]]]] = None
@@ -89,16 +68,21 @@ def _load_pokedex() -> Dict[str, Dict[str, Any]]:
     return _POKEDEX
 
 
+_TOP_OU: Optional[List[Dict[str, Any]]] = None
+
+
+def _top_ou_priors() -> List[Dict[str, Any]]:
+    """Le TOP_OU_K specie più frequenti nel train, con statistiche dal Pokédex (costruito dai dati)."""
+    global _TOP_OU
+    if _TOP_OU is None:
+        _TOP_OU = [{"name": n, "spe": float(_get_stats(n).get("base_spe", 80.0)), "freq": species_frequency(n)}
+                   for n in top_species(TOP_OU_K)]
+    return _TOP_OU
+
+
 def _load_move_priors() -> Dict[str, List[Dict[str, Any]]]:
-    global _MOVE_PRIORS
-    if _MOVE_PRIORS is not None:
-        return _MOVE_PRIORS
-    if MOVE_PRIORS_JSON_PATH.exists():
-        with open(MOVE_PRIORS_JSON_PATH, "r", encoding="utf-8") as f:
-            _MOVE_PRIORS = json.load(f)
-    else:
-        _MOVE_PRIORS = {}
-    return _MOVE_PRIORS
+    """P(mossa | specie) calcolata dal solo train (prima veniva da data/empirical_move_priors.json)."""
+    return move_priors()
 
 
 def _load_type_chart() -> Dict[Tuple[str, str], float]:
@@ -673,7 +657,7 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     p2_unrevealed_prior_vuln = 0.0
     if p2_unrevealed > 0:
         seen_p2_species = {m["name"] for m in p2_alive}
-        unseen_ou = [p for p in TOP_OU_PRIORS if p["name"] not in seen_p2_species]
+        unseen_ou = [p for p in _top_ou_priors() if p["name"] not in seen_p2_species]
         if unseen_ou:
             p1_top_spe = max([m["spe_eff"] for m in p1_alive] or [80.0])
             total_freq = sum(p["freq"] for p in unseen_ou)
@@ -690,8 +674,9 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     feat[f"{PREFIX}p2_unrevealed_prior_vulnerability"] = float(p2_unrevealed_prior_vuln)
 
     p1_max_spe = max([m["spe_eff"] for m in p1_alive] or [80.0])
-    slower_count = sum(1 for s in TOP_OU_SPEEDS_LV100 if s < p1_max_spe)
-    q_ou = slower_count / max(len(TOP_OU_SPEEDS_LV100), 1)
+    top_ou_speeds = [2.0 * p["spe"] + 98.0 for p in _top_ou_priors()]
+    slower_count = sum(1 for s in top_ou_speeds if s < p1_max_spe)
+    q_ou = slower_count / max(len(top_ou_speeds), 1)
     feat[f"{PREFIX}p1_speed_ceiling_vs_unrevealed_ou_quantile"] = float(q_ou ** max(float(p2_unrevealed), 1.0))
 
     return feat

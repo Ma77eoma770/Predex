@@ -14,10 +14,11 @@ Prefix: mit_
 
 import json
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import FrozenSet, Any, Dict, List, Optional, Set, Tuple
 
 import pandas as pd
 
+from src.features.data_priors import bulky_species
 from src.config import DATA_DIR, TYPE_CHART_CSV
 
 PREFIX = "mit_"
@@ -47,9 +48,9 @@ STATUS_DISCOUNT: Dict[str, float] = {
     "brn": 0.85,
 }
 
-WALL_SPECIES: Set[str] = {
-    "snorlax", "suicune", "skarmory", "blissey", "miltank", "umbreon", "forretress", "cloyster", "steelix"
-}
+# Pulizia 04/11: prima era una lista scritta a mano; ora sono le specie con base_hp + base_def + base_spd >= 270
+# nelle squadre di P1 del train (src/features/data_priors.py).
+WALL_SPECIES: FrozenSet[str] = bulky_species()
 
 
 def _load_pokedex() -> Dict[str, Dict[str, Any]]:
