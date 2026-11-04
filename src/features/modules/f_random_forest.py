@@ -34,6 +34,7 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 import numpy as np
 import pandas as pd
 
+from src.features.data_priors import move_users, species_frequency, team_share_with_any
 from src.config import DATA_DIR, TYPE_CHART_CSV
 
 PREFIX = "rf_"
@@ -1170,8 +1171,8 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     feat[f"{PREFIX}diff_electric_unresisted_sweep"] = float(p1_elec_sweep - p2_elec_sweep)
 
     # Anti-Blunder 2: Cleric Stall & Recovery Potential (Miltank / Blissey alive with Heal Bell / Milk Drink)
-    p1_cleric = 1.0 if any(c in p1_team_names and c not in p1_fainted and p1_last_hp.get(c, 0.0) >= 0.35 for c in ("miltank", "blissey")) else 0.0
-    p2_cleric = 1.0 if any(c in p2_seen_names and c not in p2_fainted and p2_last_hp.get(c, 0.0) >= 0.35 for c in ("miltank", "blissey")) else 0.0
+    p1_cleric = 1.0 if any(c in p1_team_names and c not in p1_fainted and p1_last_hp.get(c, 0.0) >= 0.35 for c in move_users(frozenset({"healbell"}))) else 0.0
+    p2_cleric = 1.0 if any(c in p2_seen_names and c not in p2_fainted and p2_last_hp.get(c, 0.0) >= 0.35 for c in move_users(frozenset({"healbell"}))) else 0.0
     feat[f"{PREFIX}p1_cleric_recovery_potential"] = float(p1_cleric)
     feat[f"{PREFIX}p2_cleric_recovery_potential"] = float(p2_cleric)
     feat[f"{PREFIX}diff_cleric_recovery_potential"] = float(p1_cleric - p2_cleric)
@@ -1434,9 +1435,11 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     feat[f"{PREFIX}diff_revenge_killer_ready"] = float(p1_revenge_ready - p2_revenge_ready)
 
     # 3. Bayesian P2 Unrevealed Danger Distribution
-    p2_unrev_snorlax_prob = (0.95 * p2_unrevealed / 6.0) if ("snorlax" not in p2_seen_names) else 0.0
-    p2_unrev_elec_prob = (0.65 * p2_unrevealed / 6.0) if not any(n in p2_seen_names for n in ("zapdos", "raikou")) else 0.0
-    p2_unrev_spikes_prob = (0.70 * p2_unrevealed / 6.0) if not any(n in p2_seen_names for n in ("cloyster", "skarmory")) else 0.0
+    # Probabilità a priori calcolate dal train (prima: 0.95 / 0.65 / 0.70 scritti a mano)
+    spikers = move_users(frozenset({"spikes"}))
+    p2_unrev_snorlax_prob = (species_frequency("snorlax") * p2_unrevealed / 6.0) if ("snorlax" not in p2_seen_names) else 0.0
+    p2_unrev_elec_prob = (team_share_with_any(("zapdos", "raikou")) * p2_unrevealed / 6.0) if not any(n in p2_seen_names for n in ("zapdos", "raikou")) else 0.0
+    p2_unrev_spikes_prob = (team_share_with_any(spikers) * p2_unrevealed / 6.0) if not any(n in p2_seen_names for n in spikers) else 0.0
     p2_total_unrev_danger = p2_unrev_snorlax_prob * 1.5 + p2_unrev_elec_prob * 1.2 + p2_unrev_spikes_prob * 1.0
 
     feat[f"{PREFIX}p2_unrevealed_snorlax_prob"] = float(p2_unrev_snorlax_prob)
@@ -1515,7 +1518,7 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     feat[f"{PREFIX}diff_defensive_wall_lock"] = float(p1_wall_lock - p2_wall_lock)
 
     # 10. NEW: Permanent Spikes vs Dead Rapid Spinner (Cloyster, Forretress, Starmie)
-    spinners = {"cloyster", "forretress", "starmie"}
+    spinners = move_users(frozenset({"rapidspin"}))  # dal train (prima: lista scritta a mano)
     p1_spinners_alive = sum(1 for p in p1_team if p.get("name", "").strip().lower() in spinners and p.get("name", "").strip().lower() not in p1_fainted)
     p2_spinners_alive = sum(1 for n in p2_seen_names if n in spinners and n not in p2_fainted)
     p1_perm_spikes = 1.0 if (p1_spikes_set and p2_spinners_alive == 0 and p2_unrevealed == 0) else (0.5 if (p1_spikes_set and p2_spinners_alive == 0) else 0.0)
@@ -1525,7 +1528,7 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     feat[f"{PREFIX}diff_permanent_spikes_active"] = float(p1_perm_spikes - p2_perm_spikes)
 
     # 11. NEW: Phazing Defense vs Opponent Setup Boosts (Roar / Whirlwind wipes stat stages)
-    phazers = {"skarmory", "suicune", "raikou", "zapdos", "steelix", "tyranitar"}
+    phazers = move_users(frozenset({"roar", "whirlwind"}))  # dal train (prima: lista scritta a mano)
     p1_has_phazer = any((p.get("name", "").strip().lower() in phazers or p1_phazing_count > 0) and p.get("name", "").strip().lower() not in p1_fainted for p in p1_team)
     p2_has_phazer = any((n in phazers or p2_phazing_count > 0) and n not in p2_fainted for n in p2_seen_names)
     p1_phazing_denial = 1.0 if (p2_pos_boosts >= 2.0 and p1_has_phazer) else 0.0
