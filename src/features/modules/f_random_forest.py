@@ -53,19 +53,10 @@ SPECIAL_TYPES: Set[str] = {
     "ice", "dragon", "dark"
 }
 
-# Smogon Gen 2 OU Viability Rankings (Tier Power Index)
-GEN2_OU_VIABILITY: Dict[str, float] = {
-    "snorlax": 100.0,
-    "zapdos": 88.0, "raikou": 85.0, "cloyster": 84.0,
-    "skarmory": 80.0, "suicune": 80.0, "tyranitar": 78.0,
-    "gengar": 75.0, "marowak": 75.0, "starmie": 73.0, "exeggutor": 72.0,
-    "forretress": 70.0, "miltank": 70.0, "nidoking": 68.0, "machamp": 68.0,
-    "heracross": 62.0, "vaporeon": 62.0, "umbreon": 60.0, "misdreavus": 60.0,
-    "steelix": 58.0, "rhydon": 56.0, "blissey": 55.0, "jynx": 55.0, "jolteon": 55.0,
-    "charizard": 45.0, "meganium": 42.0, "porygon2": 40.0, "golem": 40.0, "clefable": 38.0, "dragonite": 50.0,
-}
-DEFAULT_OU_VIABILITY: float = 65.0
-DEFAULT_UNLISTED_VIABILITY: float = 25.0
+# Pulizia (persona D, 30/10): rimossa la classifica Smogon Gen 2 OU (dato esterno, vietato dal
+# regolamento). La "viability" ora si calcola solo dalle statistiche base presenti nei dati, con la
+# stessa formula di f_mitigations._get_viability.
+DEFAULT_OU_VIABILITY: float = 65.0  # valore a priori per i Pokémon di P2 non ancora rivelati
 
 # ---------------------------------------------------------------------------
 # Type Chart & Pokedex In-Memory Cache
@@ -141,6 +132,12 @@ STAGE_MULT = {
     -6: 0.25, -5: 0.28, -4: 0.33, -3: 0.40, -2: 0.50, -1: 0.66,
     0: 1.0, 1: 1.5, 2: 2.0, 3: 2.5, 4: 3.0, 5: 3.5, 6: 4.0
 }
+
+
+def _bst_viability(name: str, pokedex: Dict[str, Dict[str, Any]]) -> float:
+    st = _lookup_stats(name, pokedex)
+    bst = sum(st.get(f"base_{s}", 80.0) for s in ["hp", "atk", "def", "spa", "spd", "spe"])
+    return float(min(80.0, max(20.0, (bst - 300.0) / 3.0)))
 
 
 def _lookup_stats(name: str, pokedex: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
@@ -1198,9 +1195,9 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     feat[f"{PREFIX}p2_explosion_net_efficiency"] = float(p2_effective_explosion)
     feat[f"{PREFIX}diff_explosion_net_efficiency"] = float(p1_effective_explosion - p2_effective_explosion)
 
-    # Smogon Gen 2 OU Viability Power Index of surviving Pokémon
-    p1_alive_viability = sum(GEN2_OU_VIABILITY.get(p.get("name", "").strip().lower(), DEFAULT_UNLISTED_VIABILITY) for p in p1_team if p.get("name", "").strip().lower() not in p1_fainted) / 100.0
-    p2_alive_viability = (sum(GEN2_OU_VIABILITY.get(n, DEFAULT_UNLISTED_VIABILITY) for n in p2_seen_names if n not in p2_fainted) + (p2_unrevealed * DEFAULT_OU_VIABILITY)) / 100.0
+    # Viability of surviving Pokémon (from base stats in the data; Smogon ranking removed)
+    p1_alive_viability = sum(_bst_viability(p.get("name", ""), pokedex) for p in p1_team if p.get("name", "").strip().lower() not in p1_fainted) / 100.0
+    p2_alive_viability = (sum(_bst_viability(n, pokedex) for n in p2_seen_names if n not in p2_fainted) + (p2_unrevealed * DEFAULT_OU_VIABILITY)) / 100.0
     feat[f"{PREFIX}p1_alive_viability"] = float(p1_alive_viability)
     feat[f"{PREFIX}p2_alive_viability"] = float(p2_alive_viability)
     feat[f"{PREFIX}diff_alive_viability"] = float(p1_alive_viability - p2_alive_viability)

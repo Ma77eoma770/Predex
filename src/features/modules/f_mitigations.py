@@ -26,17 +26,8 @@ POKEDEX_JSON_PATH = DATA_DIR / "pokedex.json"
 _POKEDEX: Optional[Dict[str, Dict[str, Any]]] = None
 _TYPE_CHART: Optional[Dict[Tuple[str, str], float]] = None
 
-GEN2_OU_VIABILITY: Dict[str, float] = {
-    "snorlax": 100.0,
-    "zapdos": 88.0, "raikou": 85.0, "cloyster": 84.0,
-    "skarmory": 80.0, "suicune": 80.0, "tyranitar": 78.0,
-    "gengar": 75.0, "marowak": 75.0, "starmie": 73.0, "exeggutor": 72.0,
-    "forretress": 70.0, "miltank": 70.0, "nidoking": 68.0, "machamp": 68.0,
-    "heracross": 62.0, "vaporeon": 62.0, "umbreon": 60.0, "misdreavus": 60.0,
-    "steelix": 58.0, "rhydon": 56.0, "blissey": 55.0, "jynx": 55.0, "jolteon": 55.0,
-    "charizard": 45.0, "meganium": 42.0, "porygon2": 40.0, "golem": 40.0,
-    "clefable": 38.0, "dragonite": 50.0,
-}
+# Pulizia (persona D, 30/10): rimossa la classifica Smogon Gen 2 OU (dato esterno, vietato dal
+# regolamento). La "viability" ora si calcola solo dalle statistiche base presenti nei dati (vedi _get_viability).
 DEFAULT_OU_VIABILITY: float = 65.0
 DEFAULT_UNLISTED_VIABILITY: float = 25.0
 
@@ -121,8 +112,6 @@ def _get_stats(name: str) -> Dict[str, Any]:
 
 def _get_viability(name: str) -> float:
     norm = str(name).strip().lower()
-    if norm in GEN2_OU_VIABILITY:
-        return GEN2_OU_VIABILITY[norm]
     st = _get_stats(norm)
     bst = sum(st.get(f"base_{s}", 80.0) for s in ["hp", "atk", "def", "spa", "spd", "spe"])
     return float(min(80.0, max(20.0, (bst - 300.0) / 3.0)))
@@ -215,7 +204,8 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
         p2_status[name] = "fnt"
 
     p1_alive_names = [n for n in p1_team_names if n not in p1_fainted and p1_hp[n] > 0.001]
-    p2_alive_names = [n for n in p2_seen_names if n not in p2_fainted and p2_hp[n] > 0.001]
+    # sorted: un set ha un ordine che cambia a ogni esecuzione (hash casuale), e il rollout dipende dall ordine
+    p2_alive_names = [n for n in sorted(p2_seen_names) if n not in p2_fainted and p2_hp[n] > 0.001]
 
     # Pre-fetch stats of alive Pokémon
     p1_alive_stats = [_get_stats(n) for n in p1_alive_names]

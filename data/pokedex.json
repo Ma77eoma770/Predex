@@ -2962,39 +2962,5 @@
     "base_spa": 70.0,
     "base_spd": 45.0,
     "base_spe": 70.0
-  },
-  "ledyba": {
-    "types": [
-      "bug",
-      "flying"
-    ],
-    "base_hp": 40,
-    "base_atk": 20,
-    "base_def": 30,
-    "base_spa": 40,
-    "base_spd": 80,
-    "base_spe": 55
-  },
-  "remoraid": {
-    "types": [
-      "water"
-    ],
-    "base_hp": 35,
-    "base_atk": 65,
-    "base_def": 35,
-    "base_spa": 65,
-    "base_spd": 35,
-    "base_spe": 65
-  },
-  "nidorina": {
-    "types": [
-      "poison"
-    ],
-    "base_hp": 70,
-    "base_atk": 62,
-    "base_def": 67,
-    "base_spa": 55,
-    "base_spd": 55,
-    "base_spe": 56
   }
 }

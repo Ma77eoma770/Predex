@@ -284,7 +284,8 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
         p2_status[name] = "fnt"
 
     p1_alive_names = [n for n in p1_team_names if n not in p1_fainted and p1_hp[n] > 0.001]
-    p2_alive_names = [n for n in p2_seen_names if n not in p2_fainted and p2_hp[n] > 0.001]
+    # sorted: un set ha un ordine che cambia a ogni esecuzione (hash casuale), e il rollout dipende dall ordine
+    p2_alive_names = [n for n in sorted(p2_seen_names) if n not in p2_fainted and p2_hp[n] > 0.001]
 
     move_priors_db = _load_move_priors()
 
