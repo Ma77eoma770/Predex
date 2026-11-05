@@ -23,7 +23,8 @@ Focuses exclusively on deep abstract competitive mechanics:
    - High-impact move counters (Toxic, T-Wave, Sleep, Recovery, Explosion, Phazing, Belly Drum).
    - Endgame pressure and clutch ratios.
 
-No hardcoded Pokémon species names.
+Species-specific features use names that appear in the data; all priors and species groups are
+computed from train.jsonl (src/features/data_priors.py), never from hand-written tables.
 Module Name: random_forest
 Prefix: rf_
 """
@@ -34,7 +35,7 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 import numpy as np
 import pandas as pd
 
-from src.features.data_priors import move_users, species_frequency, team_share_with_any
+from src.features.data_priors import average_team_member, move_users, species_frequency, team_share_with_any
 from src.config import DATA_DIR, TYPE_CHART_CSV
 
 PREFIX = "rf_"
@@ -57,7 +58,7 @@ SPECIAL_TYPES: Set[str] = {
 # Pulizia (persona D, 30/10): rimossa la classifica Smogon Gen 2 OU (dato esterno, vietato dal
 # regolamento). La "viability" ora si calcola solo dalle statistiche base presenti nei dati, con la
 # stessa formula di f_mitigations._get_viability.
-DEFAULT_OU_VIABILITY: float = 65.0  # valore a priori per i Pokémon di P2 non ancora rivelati
+DEFAULT_OU_VIABILITY: float = average_team_member()["viability"]  # Pokémon medio del train (prima: 65 scritto a mano)
 
 # ---------------------------------------------------------------------------
 # Type Chart & Pokedex In-Memory Cache
@@ -554,11 +555,8 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
             p1_lefties_turns += p1_turns_on_field.get(pname, 0)
         elif "berry" in item or item in ("miracleberry", "mintberry", "bitterberry"):
             p1_berries_count += 1
-        elif item in ("thickclub", "lightball", "charcoal", "mysticwater", "miracleseed",
-                      "magnet", "hardstone", "spelltag", "blackglasses", "metalcoat",
-                      "dragonscale", "sharpbeak", "softsand", "poisonbarb", "nevermeltice",
-                      "twistedspoon", "blackbelt", "silverpowder", "focusband", "kingsrock"):
-            p1_offensive_items += 1
+        elif item and item not in ("leftovers", "none", "noitem"):
+            p1_offensive_items += 1  # any other held item (before: hand-written list of item names)
 
     feat[f"{PREFIX}p1_leftovers_count"] = float(p1_leftovers_count)
     feat[f"{PREFIX}p1_berries_count"] = float(p1_berries_count)
@@ -618,7 +616,7 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     p2_alive_count = 0
     p2_alive_grounded = 0
 
-    for p2_name in p2_seen_names:
+    for p2_name in sorted(p2_seen_names):
         stats = _lookup_stats(p2_name, pokedex)
         hp = float(stats["base_hp"])
         atk = float(stats["base_atk"])
@@ -652,14 +650,11 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     p2_unrevealed = max(0, 6 - len(p2_seen_names))
     p2_alive_total_count = p2_alive_count + p2_unrevealed
 
-    # Fill unrevealed with standard Gen 2 OU average (85 across stats)
-    p2_alive_stats["hp"] += p2_unrevealed * 85.0
-    p2_alive_stats["atk"] += p2_unrevealed * 85.0
-    p2_alive_stats["def"] += p2_unrevealed * 85.0
-    p2_alive_stats["spa"] += p2_unrevealed * 85.0
-    p2_alive_stats["spd"] += p2_unrevealed * 85.0
-    p2_alive_stats["spe"] += p2_unrevealed * 85.0
-    p2_alive_grounded += int(round(p2_unrevealed * 0.80))
+    # Fill unrevealed with the average P1 team member of the training set (data_priors; before: 85 / 80% by hand)
+    avg = average_team_member()
+    for stat in ("hp", "atk", "def", "spa", "spd", "spe"):
+        p2_alive_stats[stat] += p2_unrevealed * avg[stat]
+    p2_alive_grounded += int(round(p2_unrevealed * avg["grounded_share"]))
 
     # Base Stat Totals (BST)
     p1_alive_bst = sum(p1_alive_stats.values())
@@ -683,8 +678,8 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
 
     p1_alive_phys_sum = sum(p1_alive_phys_bulks)
     p1_alive_spec_sum = sum(p1_alive_spec_bulks)
-    p2_alive_phys_sum = sum(p2_alive_phys_bulks) + (p2_unrevealed * 72.0)
-    p2_alive_spec_sum = sum(p2_alive_spec_bulks) + (p2_unrevealed * 72.0)
+    p2_alive_phys_sum = sum(p2_alive_phys_bulks) + (p2_unrevealed * average_team_member()["phys_bulk"])
+    p2_alive_spec_sum = sum(p2_alive_spec_bulks) + (p2_unrevealed * average_team_member()["spec_bulk"])
 
     feat[f"{PREFIX}p1_alive_phys_bulk_sum"] = float(p1_alive_phys_sum)
     feat[f"{PREFIX}p1_alive_spec_bulk_sum"] = float(p1_alive_spec_sum)
@@ -1129,13 +1124,13 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
             p1_effective_bulk_hp += hp_val * bulk
 
     p2_effective_bulk_hp = 0.0
-    for p2_name in p2_seen_names:
+    for p2_name in sorted(p2_seen_names):
         if p2_name not in p2_fainted:
             hp_val = p2_last_hp.get(p2_name, 1.0)
             st = _lookup_stats(p2_name, pokedex)
             bulk = float(st.get("base_hp", 80)) * (float(st.get("base_def", 80)) + float(st.get("base_spd", 80))) / 200.0
             p2_effective_bulk_hp += hp_val * bulk
-    p2_effective_bulk_hp += p2_unrevealed * 75.0
+    p2_effective_bulk_hp += p2_unrevealed * average_team_member()["effective_bulk"]
 
     feat[f"{PREFIX}p1_alive_effective_bulk_hp"] = float(p1_effective_bulk_hp)
     feat[f"{PREFIX}p2_alive_effective_bulk_hp"] = float(p2_effective_bulk_hp)
@@ -1156,13 +1151,14 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     feat[f"{PREFIX}diff_curse_snorlax"] = float(p1_curse_snorlax - p2_curse_snorlax)
 
     # Anti-Blunder 1: Electric Unresisted Sweep (Jolteon/Raikou/Zapdos alive vs zero ground immunities)
-    p1_has_elec = any(e in p1_team_names and e not in p1_fainted and p1_last_hp.get(e, 0.0) >= 0.30 for e in ("jolteon", "raikou", "zapdos"))
-    p2_has_ground = any(name not in p2_fainted and "ground" in [t.lower() for t in _lookup_stats(name, pokedex).get("types", [])] for name in p2_seen_names)
+    # Electric attackers = Pokémon with the electric type (from the data), not a hand-written list
+    p1_has_elec = any("electric" in [t.lower() for t in p.get("types", [])] and p.get("name", "").strip().lower() not in p1_fainted and p1_last_hp.get(p.get("name", "").strip().lower(), 0.0) >= 0.30 for p in p1_team)
+    p2_has_ground = any(name not in p2_fainted and "ground" in [t.lower() for t in _lookup_stats(name, pokedex).get("types", [])] for name in sorted(p2_seen_names))
     p1_elec_sweep = 0.0
     if p1_has_elec and p2_alive > 0 and not p2_has_ground:
         p1_elec_sweep = 1.0 if p2_unrevealed == 0 else 0.5
 
-    p2_has_elec = any(e in p2_seen_names and e not in p2_fainted and p2_last_hp.get(e, 0.0) >= 0.30 for e in ("jolteon", "raikou", "zapdos"))
+    p2_has_elec = any("electric" in [t.lower() for t in _lookup_stats(e, pokedex).get("types", [])] and e not in p2_fainted and p2_last_hp.get(e, 0.0) >= 0.30 for e in sorted(p2_seen_names))
     p1_has_ground = any(p.get("name", "").strip().lower() not in p1_fainted and "ground" in [t.lower() for t in p.get("types", [])] for p in p1_team)
     p2_elec_sweep = 1.0 if (p2_has_elec and p1_alive > 0 and not p1_has_ground) else 0.0
 
@@ -1198,7 +1194,7 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
 
     # Viability of surviving Pokémon (from base stats in the data; Smogon ranking removed)
     p1_alive_viability = sum(_bst_viability(p.get("name", ""), pokedex) for p in p1_team if p.get("name", "").strip().lower() not in p1_fainted) / 100.0
-    p2_alive_viability = (sum(_bst_viability(n, pokedex) for n in p2_seen_names if n not in p2_fainted) + (p2_unrevealed * DEFAULT_OU_VIABILITY)) / 100.0
+    p2_alive_viability = (sum(_bst_viability(n, pokedex) for n in sorted(p2_seen_names) if n not in p2_fainted) + (p2_unrevealed * DEFAULT_OU_VIABILITY)) / 100.0
     feat[f"{PREFIX}p1_alive_viability"] = float(p1_alive_viability)
     feat[f"{PREFIX}p2_alive_viability"] = float(p2_alive_viability)
     feat[f"{PREFIX}diff_alive_viability"] = float(p1_alive_viability - p2_alive_viability)
@@ -1343,7 +1339,7 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     # 4. Big 6 Competitive Elemental Types
     p1_types_all = [t.lower() for p in p1_team for t in p.get("types", []) if t]
     p2_types_all = []
-    for name in p2_seen_names:
+    for name in sorted(p2_seen_names):
         st = _lookup_stats(name, pokedex)
         p2_types_all.extend([t.lower() for t in st.get("types", []) if t])
 
@@ -1386,7 +1382,7 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     # =========================================================================
     # 1. Active Speed Dominance over Opponent's Remaining Bench
     p2_alive_speeds = []
-    for name in p2_seen_names:
+    for name in sorted(p2_seen_names):
         if name not in p2_fainted and name != p2_act_name:
             st = _lookup_stats(name, pokedex)
             p2_alive_speeds.append(float(st.get("base_spe", 80)))
@@ -1420,7 +1416,7 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
 
     p2_revenge_ready = 0.0
     if p2_act_is_fnt:
-        for name in p2_seen_names:
+        for name in sorted(p2_seen_names):
             if name not in p2_fainted:
                 st = _lookup_stats(name, pokedex)
                 b_spe = float(st.get("base_spe", 80))
@@ -1487,7 +1483,7 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
             p1_alive_eff_speeds.append(b_spe * par_p * boost_p)
 
     p2_alive_eff_speeds = []
-    for name in p2_seen_names:
+    for name in sorted(p2_seen_names):
         if name not in p2_fainted:
             st = _lookup_stats(name, pokedex)
             b_spe = float(st.get("base_spe", 80))
@@ -1509,7 +1505,7 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     # 9. NEW: Defensive Stalling Wall Lock (Skarmory / Steelix without super-effective answers)
     p1_has_skarmory = ("skarmory" in p1_team_names and "skarmory" not in p1_fainted and p1_last_hp.get("skarmory", 0.0) >= 0.35)
     p2_has_skarmory = ("skarmory" in p2_seen_names and "skarmory" not in p2_fainted and p2_last_hp.get("skarmory", 0.0) >= 0.35)
-    p2_has_fire_elec = any("fire" in [t.lower() for t in _lookup_stats(n, pokedex).get("types", [])] or "electric" in [t.lower() for t in _lookup_stats(n, pokedex).get("types", [])] for n in p2_seen_names if n not in p2_fainted)
+    p2_has_fire_elec = any("fire" in [t.lower() for t in _lookup_stats(n, pokedex).get("types", [])] or "electric" in [t.lower() for t in _lookup_stats(n, pokedex).get("types", [])] for n in sorted(p2_seen_names) if n not in p2_fainted)
     p1_has_fire_elec = any("fire" in [t.lower() for t in p.get("types", [])] or "electric" in [t.lower() for t in p.get("types", [])] for p in p1_team if p.get("name", "").strip().lower() not in p1_fainted)
     p1_wall_lock = 1.0 if (p1_has_skarmory and not p2_has_fire_elec and p2_unrevealed == 0) else (0.5 if (p1_has_skarmory and not p2_has_fire_elec) else 0.0)
     p2_wall_lock = 1.0 if (p2_has_skarmory and not p1_has_fire_elec) else 0.0
@@ -1520,7 +1516,7 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     # 10. NEW: Permanent Spikes vs Dead Rapid Spinner (Cloyster, Forretress, Starmie)
     spinners = move_users(frozenset({"rapidspin"}))  # dal train (prima: lista scritta a mano)
     p1_spinners_alive = sum(1 for p in p1_team if p.get("name", "").strip().lower() in spinners and p.get("name", "").strip().lower() not in p1_fainted)
-    p2_spinners_alive = sum(1 for n in p2_seen_names if n in spinners and n not in p2_fainted)
+    p2_spinners_alive = sum(1 for n in sorted(p2_seen_names) if n in spinners and n not in p2_fainted)
     p1_perm_spikes = 1.0 if (p1_spikes_set and p2_spinners_alive == 0 and p2_unrevealed == 0) else (0.5 if (p1_spikes_set and p2_spinners_alive == 0) else 0.0)
     p2_perm_spikes = 1.0 if (p2_spikes_set and p1_spinners_alive == 0) else 0.0
     feat[f"{PREFIX}p1_permanent_spikes_active"] = float(p1_perm_spikes)
@@ -1530,7 +1526,7 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     # 11. NEW: Phazing Defense vs Opponent Setup Boosts (Roar / Whirlwind wipes stat stages)
     phazers = move_users(frozenset({"roar", "whirlwind"}))  # dal train (prima: lista scritta a mano)
     p1_has_phazer = any((p.get("name", "").strip().lower() in phazers or p1_phazing_count > 0) and p.get("name", "").strip().lower() not in p1_fainted for p in p1_team)
-    p2_has_phazer = any((n in phazers or p2_phazing_count > 0) and n not in p2_fainted for n in p2_seen_names)
+    p2_has_phazer = any((n in phazers or p2_phazing_count > 0) and n not in p2_fainted for n in sorted(p2_seen_names))
     p1_phazing_denial = 1.0 if (p2_pos_boosts >= 2.0 and p1_has_phazer) else 0.0
     p2_phazing_denial = 1.0 if (p1_pos_boosts >= 2.0 and p2_has_phazer) else 0.0
     feat[f"{PREFIX}p1_phazing_denial_ready"] = float(p1_phazing_denial)
@@ -1539,7 +1535,7 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
 
     # 12. Macro Offensive Pressure vs Opponent Effective Bulk
     p1_alive_firepower = sum(max(float(p.get("base_atk", 80)), float(p.get("base_spa", 80))) for p in p1_team if p.get("name", "").strip().lower() not in p1_fainted)
-    p2_alive_firepower = sum(max(float(stats.get("base_atk", 80)), float(stats.get("base_spa", 80))) for name in p2_seen_names if name not in p2_fainted for stats in [_lookup_stats(name, pokedex)]) + (p2_unrevealed * 85.0)
+    p2_alive_firepower = sum(max(float(stats.get("base_atk", 80)), float(stats.get("base_spa", 80))) for name in sorted(p2_seen_names) if name not in p2_fainted for stats in [_lookup_stats(name, pokedex)]) + (p2_unrevealed * average_team_member()["firepower"])
 
     p1_macro_press = p1_alive_firepower / max(1.0, p2_effective_bulk_hp)
     p2_macro_press = p2_alive_firepower / max(1.0, p1_effective_bulk_hp)
@@ -1550,7 +1546,7 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     # 12. Defensive Blindspot Exploitation by Opponent
     p1_blindspots_types = [t for t in GEN2_TYPES if sum(1 for p in p1_team if _defensive_multiplier(t, p.get("types", []), chart) > 1.0) >= 3]
     p2_exploit_count = 0.0
-    for name in p2_seen_names:
+    for name in sorted(p2_seen_names):
         st = _lookup_stats(name, pokedex)
         types_p2 = [t.lower() for t in st.get("types", []) if t]
         if any(t in p1_blindspots_types for t in types_p2):
