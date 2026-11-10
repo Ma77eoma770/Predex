@@ -18,7 +18,7 @@ from typing import FrozenSet, Any, Dict, List, Optional, Set, Tuple
 
 import pandas as pd
 
-from src.features.data_priors import bulky_species
+from src.features.data_priors import average_team_member, bulky_species
 from src.config import DATA_DIR, TYPE_CHART_CSV
 
 PREFIX = "mit_"
@@ -29,7 +29,7 @@ _TYPE_CHART: Optional[Dict[Tuple[str, str], float]] = None
 
 # Pulizia (persona D, 30/10): rimossa la classifica Smogon Gen 2 OU (dato esterno, vietato dal
 # regolamento). La "viability" ora si calcola solo dalle statistiche base presenti nei dati (vedi _get_viability).
-DEFAULT_OU_VIABILITY: float = 65.0
+DEFAULT_OU_VIABILITY: float = average_team_member()["viability"]  # Pokémon medio del train
 DEFAULT_UNLISTED_VIABILITY: float = 25.0
 
 SETUP_MOVES: Set[str] = {
@@ -217,7 +217,7 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
     # -------------------------------------------------------------------------
     p2_unrevealed = max(0, 6 - len(p2_seen_names))
     p1_eff_hp = sum(p1_hp[n] * STATUS_DISCOUNT.get(p1_status[n], 1.0) for n in p1_team_names)
-    p2_eff_hp = sum(p2_hp[n] * STATUS_DISCOUNT.get(p2_status[n], 1.0) for n in p2_seen_names) + (p2_unrevealed * 1.0)
+    p2_eff_hp = sum(p2_hp[n] * STATUS_DISCOUNT.get(p2_status[n], 1.0) for n in sorted(p2_seen_names)) + (p2_unrevealed * 1.0)
 
     feat[f"{PREFIX}p1_effective_combat_hp"] = float(p1_eff_hp)
     feat[f"{PREFIX}p2_effective_combat_hp"] = float(p2_eff_hp)

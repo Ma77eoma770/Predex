@@ -120,3 +120,26 @@ def bulky_species(min_bulk: float = 270.0) -> FrozenSet[str]:
             for p in json.loads(line).get("p1_team_details", []):
                 stats.setdefault(p["name"].strip().lower(), p["base_hp"] + p["base_def"] + p["base_spd"])
     return frozenset(s for s, b in stats.items() if b >= min_bulk and team_count[s] >= MIN_APPEARANCES)
+
+
+@lru_cache(maxsize=1)
+def average_team_member() -> Dict[str, float]:
+    """Il "Pokémon medio" delle squadre di P1 del train: serve come valore a priori per i Pokémon di P2
+    non ancora rivelati (prima erano costanti scritte a mano: 85 per statistica, 80% non volanti, ...)."""
+    rows = []
+    with open(TRAIN_JSONL, encoding="utf-8") as f:
+        for line in f:
+            for p in json.loads(line).get("p1_team_details", []):
+                rows.append(p)
+    n = max(len(rows), 1)
+    mean = lambda fn: sum(fn(p) for p in rows) / n
+    bst = lambda p: p["base_hp"] + p["base_atk"] + p["base_def"] + p["base_spa"] + p["base_spd"] + p["base_spe"]
+    return {
+        **{s: mean(lambda p, s=s: float(p[f"base_{s}"])) for s in ("hp", "atk", "def", "spa", "spd", "spe")},
+        "grounded_share": mean(lambda p: float("flying" not in p["types"])),
+        "phys_bulk": mean(lambda p: p["base_hp"] * p["base_def"] / 100.0),
+        "spec_bulk": mean(lambda p: p["base_hp"] * p["base_spd"] / 100.0),
+        "effective_bulk": mean(lambda p: p["base_hp"] * (p["base_def"] + p["base_spd"]) / 200.0),
+        "firepower": mean(lambda p: float(max(p["base_atk"], p["base_spa"]))),
+        "viability": mean(lambda p: min(80.0, max(20.0, (bst(p) - 300.0) / 3.0))),
+    }

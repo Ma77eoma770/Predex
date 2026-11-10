@@ -293,10 +293,11 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
 
         # Pillar 1.1: Item Stat Multipliers (Light Ball Pikachu, Thick Club Marowak)
         norm_name = name.strip().lower()
-        if norm_name == "pikachu":
-            spa_lv100 *= 2.0  # Light Ball doubles SpA -> 396
-        elif norm_name == "marowak" and item != "leftovers":
-            atk_lv100 *= 2.0  # Thick Club doubles Atk -> 516
+        # Only when the item is in the data (P1); P2 items are unknown, so no assumption is made
+        if norm_name == "pikachu" and item == "lightball":
+            spa_lv100 *= 2.0  # Light Ball doubles SpA
+        elif norm_name == "marowak" and item == "thickclub":
+            atk_lv100 *= 2.0  # Thick Club doubles Atk
 
         spe_eff = spe_lv100 * STAGE_MULT.get(boosts.get("spe", 0), 1.0) * (0.25 if status == "par" else 1.0)
         atk_eff = atk_lv100 * STAGE_MULT.get(boosts.get("atk", 0), 1.0)
@@ -360,7 +361,11 @@ def extract_features(data: Dict[str, Any]) -> Dict[str, float]:
 
     p2_unrevealed = max(0, 6 - len(p2_seen_names))
     if p2_unrevealed > 0:
-        surrogate = build_combat_record("snorlax", 1.0, "nostatus", {}, [{"name": "bodyslam", "power": 85.0, "type": "normal"}])
+        # Stand-in for unrevealed P2 Pokémon: the most frequent species in the training teams, with its
+        # most used attacking move in the training battles (before: Snorlax + Body Slam written by hand)
+        sur_name = top_species(1)[0]
+        sur_move = next((m for m in move_priors().get(sur_name, []) if m["power"] > 0), {"name": "stab", "power": 80.0, "type": "normal"})
+        surrogate = build_combat_record(sur_name, 1.0, "nostatus", {}, [{"name": sur_move["name"], "power": sur_move["power"], "type": sur_move["type"]}])
         p2_alive.append(surrogate)
 
     if not p1_alive:
